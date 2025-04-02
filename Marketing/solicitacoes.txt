@@ -16,3 +16,7 @@ contato (celular, telefone, desconhecido)?
 
 5. Como o padrão de gênero, idade e estado civil muda entre
 assinantes x não assinantes?
+
+-- FILTRANDO APENAS O RESULTADO DA CAMPANHA E O BALANCE PARA BOXPLOT NO EXCEL
+SELECT y, balance
+FROM bank
