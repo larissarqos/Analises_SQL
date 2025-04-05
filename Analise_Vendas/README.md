@@ -25,8 +25,10 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 | total_sale   | Valor total da venda   | float   |
 
 ### 2. Exploração e limpeza dos dados
-* Visualização geral dos dados, verificação e tratamento de valores nulos
+* Visualização geral dos dados e verificação e tratamento de valores nulos
 ```sql
+SELECT * FROM retail_sales
+
 SELECT * FROM retail_sales
 WHERE customer_id = 0
 OR gender = '0'
@@ -36,4 +38,17 @@ OR quantity = 0
 OR price_per_unit = 0
 OR cogs = 0
 OR total_sale = 0
+
+-- Antes da exclusão, foi verificado na base de dados original se todos os valores 0 eram de fato os nulos, o que foi confirmado
+DELETE FROM retail_sales
+WHERE customer_id = '0'
+OR gender = '0'
+OR age = '0'
+OR category = '0'
+OR quantity = '0'
+OR price_per_unit = '0'
+OR cogs = '0'
+OR total_sale = '0'
 ```
+
+*
