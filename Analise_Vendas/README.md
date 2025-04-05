@@ -8,4 +8,9 @@ O objetivo do projeto é inicialmente tratar os dados, realizar uma análise exp
 ## Estrutura do Projeto
 
 ### 1. Banco de dados
-A base de dados está em inglês e se encontra em anexo como "retail_sales.csv". As datas estão no formato americano (mês/dia/ano) e os valores relacionados a dinheiro são em dólar
+A base de dados está em inglês e se encontra em anexo como "retail_sales.csv". As datas estão no formato americano (mês/dia/ano) e os valores relacionados a dinheiro são em dólar. Abaixo o dicionário dos dados:
+
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| Valor A  | Valor B  | Valor C  |
+| Dado 1   | Dado 2   | Dado 3   |
