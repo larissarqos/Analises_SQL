@@ -23,3 +23,30 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 | price_per_unit   | Preço por unidade  | float   |
 | cogs   | Custo por unidade   | float   |
 | total_sale   | Valor total da venda   | float   |
+
+### 2. Exploração e limpeza dos dados
+* Visualização geral dos dados, verificação e tratamento de valores nulos
+  ```-- VERIFICANDO VALORES NULOS
+-- Os valores nulos foram convertidos em 0
+SELECT * FROM retail_sales
+WHERE customer_id = '0'
+OR gender = '0'
+OR age = '0'
+OR category = '0'
+OR quantity = '0'
+OR price_per_unit = '0'
+OR cogs = '0'
+OR total_sale = '0'
+
+-- DELETANDO VALORES NULOS
+-- Foram deletadas 13 linhas com valores nulos numa ou mais das colunas abaixo
+-- Antes da exclusão, foi verificado na base de dados original se todos os valores 0 eram de fato os nulos, o que foi confirmado
+DELETE FROM retail_sales
+WHERE customer_id = '0'
+OR gender = '0'
+OR age = '0'
+OR category = '0'
+OR quantity = '0'
+OR price_per_unit = '0'
+OR cogs = '0'
+OR total_sale = '0' ```
