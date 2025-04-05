@@ -24,11 +24,14 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 | cogs   | Custo por unidade   | float   |
 | total_sale   | Valor total da venda   | float   |
 
-### 2. Exploração e limpeza dos dados
-* Visualização geral dos dados e verificação e tratamento de valores nulos
+### 2. Limpeza dos dados
+* Verificação e tratamento de valores nulos
 ```sql
+-- VISÃO GERAL DOS DADOS
 SELECT * FROM retail_sales
 
+-- VERIFICANDO VALORES NULOS
+-- No processo de importação dos dados, valores nulos foram convertidos em 0
 SELECT * FROM retail_sales
 WHERE customer_id = 0
 OR gender = '0'
@@ -39,7 +42,10 @@ OR price_per_unit = 0
 OR cogs = 0
 OR total_sale = 0
 
--- Antes da exclusão, foi verificado na base de dados original se todos os valores 0 eram de fato os nulos, o que foi confirmado
+-- DELETANDO VALORES NULOS
+-- Foram deletadas 13 linhas com valores nulos numa ou mais das colunas abaixo
+-- Antes da exclusão, foi verificado na base de dados original se todos os valores 0 eram de fato os nulos,
+-- o que foi confirmado
 DELETE FROM retail_sales
 WHERE customer_id = '0'
 OR gender = '0'
@@ -51,4 +57,11 @@ OR cogs = '0'
 OR total_sale = '0'
 ```
 
-*
+### 3. Análise exploratória dos dados
+  Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
+  1. Qual o total de vendas?
+     Resposta: Contamos com um total de 1987 vendas
+  ```sql
+SELECT COUNT(*) AS total_vendas
+FROM retail_sales
+```
