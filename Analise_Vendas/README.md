@@ -12,5 +12,14 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
-| Valor A  | Valor B  | Valor C  |
-| Dado 1   | Dado 2   | Dado 3   |
+| transactions_id | id da venda  | varchar (chave primária da tabela)  |
+| sale_date   | data da venda   | date  |
+| sale_time   | hoda da venda   | time(7)   |
+| customer_id   | id do cliente   | varchar(50)  |
+| gender  | gênero  | varchar(20)   |
+| age   | idade   | int  |
+| category  | categoria   | varchar(20)  |
+| quantity   | quantidade   | int   |
+| price_per_unit   | Preço por unidade  | float   |
+| cogs   | Custo por unidade   | float   |
+| total_sale   | Valor total da venda   | float   |
