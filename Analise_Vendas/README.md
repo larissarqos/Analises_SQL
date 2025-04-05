@@ -58,10 +58,17 @@ OR total_sale = '0'
 ```
 
 ### 3. Análise exploratória dos dados
-  Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
-  1. Qual o total de vendas?
+Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
+1. Qual o total de vendas?
   * Resposta: Contamos com um total de 1987 vendas
   ```sql
 SELECT COUNT(*) AS total_vendas
 FROM retail_sales
 ```
+2. Qual o total de clientes?
+  * Resposta: Contamos com um total 155 clientes
+  ```sql
+SELECT COUNT(DISTINCT customer_id) AS total_clientes
+FROM retail_sales
+```
+
