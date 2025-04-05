@@ -3,7 +3,6 @@ GO
 
 SELECT * FROM bank
 
-
 -- FILTRANDO COLUNAS COM DADOS UNKNOWN
 -- Foram filtradas 20 linhas de dados com alguma linha 'unknown' nas colunas job, contact, education ou poutcome
 -- O resultado foi exportado para .csv
@@ -22,10 +21,13 @@ ROUND(COUNT(y) * 100.0 / (SELECT COUNT(y) FROM bank), 2) AS porcentagem
 FROM bank
 WHERE y = 'yes'
 
+SELECT COUNT(*) AS total_retorno_campanha,
+FROM bank
+
 
 -- QUEREMOS CLIENTES QUE ADOTEM DEPÓSITOS A PRAZO, COM BASTANTE CAPITAL. CONSEGUIMOS ISSO?
 -- Os clientes obtidos através da campanha têm média de saldo maior que os não obtidos
--- Logo, aparentemente a campanha teve sucesso ao atingir clientes com maior capital (boxplot Excel)
+-- Logo, aparentemente a campanha teve sucesso ao atingir clientes com maior capital
 SELECT y,
 COUNT(*) AS qtd_clientes,
 ROUND(AVG(balance), 2) AS avg_balance,
@@ -36,27 +38,23 @@ FROM bank
 GROUP BY y
 
 
--- FILTRANDO APENAS O RESULTADO DA CAMPANHA E O BALANCE PARA BOXPLOT NO EXCEL
-SELECT y, balance
-FROM bank
-
-
 -- A TAXA DE SUCESSO DA CAMPANHA MUDA DE ACORDO COM O MEIO DE CONTATO?
 -- Não há impacto significativo do tipo de contato em relação ao resultado da campanha
-SELECT y, contact, COUNT(*) AS qtd_clientes
+SELECT y, contact, COUNT(*) AS contagem_contato
 FROM bank
 GROUP BY y, contact
+ORDER BY y, contagem_contato DESC
 
 
 -- COMO O PADRÃO IDADE, TRABALHO E ESTADO CIVIL MUDA ENTRE ASSINANTES E NÃO ASSINANTES?
 -- Casados e com casa tiveram menor conversão. A idade não teve muito impacto
 
--- Resultado civil por idade
+-- Resultado campanha por idade
 SELECT y,
-	AVG(age) AS media_idade,
-	STDEV(age) AS desvio_padrao
+	AVG(age) AS media_idade
 FROM bank
 GROUP BY y
+ORDER BY y, media_idade
 
 -- Resultado campanha por trabalho
 SELECT y,
@@ -64,18 +62,14 @@ SELECT y,
 	COUNT(job) AS count_job
 FROM bank
 GROUP BY y, job
+ORDER BY y, count_job DESC
 
 -- Resultado campanha por estado civil
 SELECT y, marital,
 	COUNT(marital) AS count_marital
 FROM bank
+WHERE y = 'yes'
 GROUP BY y, marital
-
--- Resultado campanha por casa
-SELECT y,
-	AVG(CASE WHEN housing = 'yes' THEN 1 ELSE 0 END) AS perc_housing
-FROM bank
-GROUP BY y
-
+ORDER BY y, count_marital DESC
 
 
