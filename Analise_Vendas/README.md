@@ -1,7 +1,7 @@
 # Projeto SQL - Análise de Vendas
 
 ## Contexto
-O projeto conta com uma base de dados de venda fictício, em que será feita a limpeza e tratamento dos dados, uma análise exploratória e por fim, uma série de soluções a perguntas de negócio, voltadas a identificar os fatores que mais influenciam a quantidade de vendas e faturamento.
+O projeto conta com uma base de dados de venda fictícia, em que será feita a limpeza e tratamento dos dados, uma análise exploratória e por fim, uma série de soluções a perguntas de negócio, voltadas a identificar os fatores que mais influenciam a quantidade de vendas e faturamento.
 
 ## Objetivos
 O objetivo do projeto é realizar uma limpeza dos dados, identificando valores nulos; uma análise exploratória para entender melhor as informações disponíveis e então resolver os problemas de negócio apresentados, trazendo insights sobre as vendas.
