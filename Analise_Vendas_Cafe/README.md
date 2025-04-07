@@ -13,6 +13,11 @@ Para identificar os melhores locais e produtos para expansão da rede, responder
 ### 1. Banco de dados
 A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). O dicionário de dados das tabelas se enconta ao final do arquivo. Abaixo o relacionamento das tabelas
 
+<p align="center">
+  <img src="[imagens/logo.png](https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8)" width="200"/>
+</p>
+
+
 ![relacao_tabelas](https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8)
 
 
