@@ -11,31 +11,13 @@ Para identificar os melhores locais e produtos para expansão da rede, responder
 
 ## Estrutura do Projeto
 ### 1. Banco de dados
-A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). O dicionário de dados das tabelas se enconta ao final do arquivo. Abaixo o relacionamento das tabelas
+A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). O dicionário de dados das tabelas se enconta ao final do arquivo. Abaixo o relacionamento das tabelas:
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8" height="500" width="700"/>
 </p>
 
-
-![relacao_tabelas](https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8)
-
-
-| Coluna | Descrição | Tipo de Dado |
-|----------|----------|----------|
-| transactions_id | ID da venda  | varchar (chave primária da tabela)  |
-| sale_date   | Data da venda   | date  |
-| sale_time   | Hora da venda   | time(7)   |
-| customer_id   | ID do cliente   | varchar(50)  |
-| gender  | Gênero  | varchar(20)   |
-| age   | Idade   | int  |
-| category  | Categoria   | varchar(20)  |
-| quantity   | Quantidade   | int   |
-| price_per_unit   | Preço por unidade  | float   |
-| cogs   | Custo por unidade   | float   |
-| total_sale   | Valor total da venda   | float   |
-
-### 2. Limpeza dos dados
+### 2. Respondendo às perguntas de negócio
 * Verificação e tratamento de valores nulos
 ```sql
 -- VISÃO GERAL DOS DADOS
