@@ -46,7 +46,7 @@ A base de dados está em inglês e possui quatro tabelas: city (cidades), custom
 | total  | Valor total da venda  | floar   |
 | rating  | Nota da venda, de 1 a 5   | int  |
 
-<br><br>
+<br>
 
 <h4 align="center">Análise de Expansão de Negócios</h4>
 <p align="center">
