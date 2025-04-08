@@ -13,6 +13,40 @@ Para identificar os melhores locais e produtos para expansão da rede, responder
 ### 1. Banco de dados
 A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). O dicionário de dados das tabelas se enconta ao final do arquivo. Abaixo o relacionamento das tabelas:
 
+**Tabela city**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| city_id | ID da cidade  | varchar(15), chave primária da tabela  |
+| city_name   | Nome da cidade   | varchar(20)  |
+| population   | Quantidade de habitantes  |  bigint |
+| estimated_rent  | Valor estimado do aluguel   | float  |
+| city_rank  | Ranking das cidades  | int  |
+
+**Tabela customers**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| customer_id | ID do cliente  | varchar(15), chave primária da tabela |
+| customer_name   | Nome do cliente   | varchar(50)  |
+| city_id   |  ID da cidade  | varchar(15), chave estrangeira  |
+
+**Tabela products**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| product_id | ID do produto  | varchar(15), chave primária da tabela  |
+| product_name   | Nome do produto   | varchar(40)  |
+| price   | Preco do produto   | float   |
+
+**Tabela sales**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| sale_id | ID da venda  | varchar(15), chave primária da tabela  |
+| sale_date   | Data da venda   | date  |
+| product_id   | ID do produto  | varchar(15), chave estrangeira  |
+| customer_id  | ID do cliente   | varchar(15), chave estrangeira |
+| total  | Valor total da venda  | floar   |
+| rating  | Nota da venda, de 1 a 5   | int  |
+
+**Relacionamento das tabelas**
 <p align="center">
   <img src="https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8" height="500" width="700"/>
 </p>
@@ -256,7 +290,7 @@ De acordo com a análise dos dados, segue quais as melhores cidades para novas l
 
 ### Dicionário dos Dados
 
--**Tabela city**
+**Tabela city**
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
 | city_id | ID da cidade  | varchar(15), chave primária da tabela  |
@@ -265,21 +299,21 @@ De acordo com a análise dos dados, segue quais as melhores cidades para novas l
 | estimated_rent  | Valor estimado do aluguel   | float  |
 | city_rank  | Ranking das cidades  | int  |
 
--**Tabela customers**
+**Tabela customers**
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
 | customer_id | ID do cliente  | varchar(15), chave primária da tabela |
 | customer_name   | Nome do cliente   | varchar(50)  |
 | city_id   |  ID da cidade  | varchar(15), chave estrangeira  |
 
--**Tabela products**
+**Tabela products**
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
 | product_id | ID do produto  | varchar(15), chave primária da tabela  |
 | product_name   | Nome do produto   | varchar(40)  |
 | price   | Preco do produto   | float   |
 
--**Tabela sales**
+**Tabela sales**
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
 | sale_id | ID da venda  | varchar(15), chave primária da tabela  |
@@ -288,5 +322,3 @@ De acordo com a análise dos dados, segue quais as melhores cidades para novas l
 | customer_id  | ID do cliente   | varchar(15), chave estrangeira |
 | total  | Valor total da venda  | floar   |
 | rating  | Nota da venda, de 1 a 5   | int  |
-
-
