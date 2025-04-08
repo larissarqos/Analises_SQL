@@ -21,6 +21,7 @@ A base de dados está em inglês e possui quatro tabelas: city (cidades), custom
 
 1. Quantos clientes por cidade nós temos?
   ```sql
+-- Organizando um "TOP 3", Jaipur, Delhi e Pune possuem maior quantidade de clientes (acima de 50)
 SELECT
 	ci.city_name AS cidade,
 	COUNT(DISTINCT cs.customer_id) AS total_clientes
@@ -33,7 +34,9 @@ ORDER BY total_clientes DESC
 ```
 
 2. Qual é o valor médio de receita por cliente em cada cidade?
+3. 
   ```sql
+-- Em termos de receita, analisando novamente os 3 maiores índices, Pune, Chennai e Bangalore encabeçam a lista
 SELECT
 	ci.city_name AS cidade,
 	SUM(total) AS receita_total,
@@ -50,6 +53,8 @@ ORDER BY receita_total DESC
 
 3. Quantas unidades de cada produto foram vendidas?
   ```sql
+-- Há 4 produtos com maior destaque nas vendas:
+-- Cold Brew Coffee Pack (6 Bottles), Ground Espresso Coffee (250g), Instant Coffee Powder (100g) e Coffee Beans (500g)
 SELECT
 	p.product_name AS produto,
 	COUNT(s.sale_id) AS total_pedidos
@@ -63,6 +68,8 @@ ORDER BY total_pedidos DESC
 
 4. Quais são os três produtos mais vendidos em cada cidade?
   ```sql
+-- Mesmo em diferentes cidades, os 4 produtos listados anteriormente com maior quantidade de vendas ocupam ao menos
+-- uma das posições no TOP 3 de cada cidade
 SELECT *
 FROM
 (
@@ -85,6 +92,8 @@ WHERE ranking <= 3
 
 5. Forneça o valor médio de vendas e aluguel estimado por cliente, de cada cidade.
   ```sql
+-- As cidades com maior receita média são Pune, Chennai e Bangalore
+-- Analisando o custo benefício x receita média, Pune, Chennai e Jaipur têm melhor desempenho
 SELECT
 	ci.city_name AS cidade,
 	ci.estimated_rent AS aluguel_estimado,
@@ -100,8 +109,9 @@ GROUP BY ci.city_name, ci.estimated_rent
 ORDER BY receita_media_cliente DESC
 ```
 
-6. Qual a estimativa, por cidade, do consumo de café, considerando o comportamento de 25% da populaçã
+6. Qual a estimativa, por cidade, do consumo de café, considerando o comportamento de 25% da população?
   ```sql
+-- Delhi e Mumbai têm maiores populações e, consequentemente, uma maior estimativa de consumo
 SELECT
 	city_name AS cidade,
 	population AS populacao,
@@ -112,6 +122,8 @@ ORDER BY populacao DESC
 
 7. Gere uma lista de cidades com seus clientes e estimativa de consumidores de café.
   ```sql
+-- Delhi possui uma maior quantidade de clientes e também maior estimativa de consumidores
+-- Especialmente se comparada com Jaipur, que possui quase a mesma quantidade de clientes, mas uma estimativa 7x menor
 SELECT 
 	ci.city_name AS cidade,
 	COUNT(DISTINCT cs.customer_id) as cont_distinta_clientes,
@@ -127,6 +139,8 @@ ORDER BY (ci.population * 0.25) / 1000000 DESC
 
 8. Qual é a receita total das vendas, considerando todas as cidades, no último trimestre de 2023?
   ```sql
+-- Dado o último trimestre, Pune, Chennai, Bangalore, Jaipur e Delhi têm maior desempenho
+-- Essas mesmas 5 cidades também têm receita geral mais alta
 SELECT
 	ci.city_name AS cidade,
 	SUM(total) AS receita_total
@@ -184,6 +198,7 @@ WHERE ultimo_mes_vendas IS NOT NULL
 
 10. Identifique as 3  cidades com a maior receita média por cliente. Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
   ```sql
+-- Pune, Chennai e Bangalore possuem maior receita média por cliente
 WITH cidade_receita
 AS
 (
@@ -223,15 +238,12 @@ JOIN cidade_receita as cr
 ON ca.cidade = cr.cidade
 ORDER BY receita_total DESC
 ```
+### 4. Recomendações
+De acordo com a análise dos dados, segue quais as melhores cidades para novas lojas e quais os produtos que, nos novos negócios, podem gerar maior receita:
 
-7. Gere uma amostra das vendas realizadas em maio de 2022
-  ```sql
--- Arquivo gerado como "sale_05_2022.csv".
-SELECT *
-FROM retail_sales
-WHERE sale_date LIKE '2022-05%'
-ORDER BY sale_date ASC
-```
+ - **Cidades**:
+   
+ - **Produtos**:
 
 ### Dicionário dos Dados
 
