@@ -71,7 +71,6 @@ ORDER BY total_clientes DESC
 ```
 
 2. Qual é o valor médio de receita por cliente em cada cidade?
-3. 
   ```sql
 -- Em termos de receita, analisando novamente os 3 maiores índices, Pune, Chennai e Bangalore encabeçam a lista
 SELECT
