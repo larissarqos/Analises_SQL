@@ -256,18 +256,37 @@ De acordo com a análise dos dados, segue quais as melhores cidades para novas l
 
 ### Dicionário dos Dados
 
+-**Tabela city**
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
-| transactions_id | ID da venda  | varchar (chave primária da tabela)  |
+| city_id | ID da cidade  | varchar(15), chave primária da tabela  |
+| city_name   | Nome da cidade   | varchar(20)  |
+| population   | Quantidade de habitantes  |  bigint |
+| estimated_rent  | Valor estimado do aluguel   | float  |
+| city_rank  | Ranking das cidades  | int  |
+
+-**Tabela customers**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| customer_id | ID do cliente  | varchar(15), chave primária da tabela |
+| customer_name   | Nome do cliente   | varchar(50)  |
+| city_id   |  ID da cidade  | varchar(15), chave estrangeira  |
+
+-**Tabela products**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| product_id | ID do produto  | varchar(15), chave primária da tabela  |
+| product_name   | Nome do produto   | varchar(40)  |
+| price   | Preco do produto   | float   |
+
+-**Tabela sales**
+| Coluna | Descrição | Tipo de Dado |
+|----------|----------|----------|
+| sale_id | ID da venda  | varchar(15), chave primária da tabela  |
 | sale_date   | Data da venda   | date  |
-| sale_time   | Hora da venda   | time(7)   |
-| customer_id   | ID do cliente   | varchar(50)  |
-| gender  | Gênero  | varchar(20)   |
-| age   | Idade   | int  |
-| category  | Categoria   | varchar(20)  |
-| quantity   | Quantidade   | int   |
-| price_per_unit   | Preço por unidade  | float   |
-| cogs   | Custo por unidade   | float   |
-| total_sale   | Valor total da venda   | float   |
+| product_id   | ID do produto  | varchar(15), chave estrangeira  |
+| customer_id  | ID do cliente   | varchar(15), chave estrangeira |
+| total  | Valor total da venda  | floar   |
+| rating  | Nota da venda, de 1 a 5   | int  |
 
 
