@@ -11,7 +11,11 @@ Para identificar os melhores locais e produtos para expansão da rede, responder
 
 ## Estrutura do Projeto
 ### 1. Banco de dados
-A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). O dicionário de dados das tabelas se enconta ao final do arquivo. Abaixo o relacionamento das tabelas:
+A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). Segue abaixo o dicionário dos dados e o relacionamento das tabelas:
+
+<p align="center">
+  "Dicionário dos dados"
+</p>
 
 **Tabela city**
 | Coluna | Descrição | Tipo de Dado |
