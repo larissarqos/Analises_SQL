@@ -46,14 +46,13 @@ A base de dados está em inglês e possui quatro tabelas: city (cidades), custom
 | total  | Valor total da venda  | floar   |
 | rating  | Nota da venda, de 1 a 5   | int  |
 
-<br>
 
 <h4 align="center">Análise de Expansão de Negócios</h4>
 <p align="center">
   <img src="https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8" height="400" width="600"/>
 </p>
 
-<br><br>
+<br>
 
 ### 2. Respondendo às perguntas de negócio
 
@@ -276,7 +275,7 @@ JOIN cidade_receita as cr
 ON ca.cidade = cr.cidade
 ORDER BY receita_total DESC
 ```
-<br><br>
+<br>
 
 ### 4. Recomendações
 De acordo com a análise dos dados, segue quais as melhores cidades para novas lojas e quais os produtos que, nos novos negócios, podem gerar maior receita:
