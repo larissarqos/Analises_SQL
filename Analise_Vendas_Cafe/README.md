@@ -18,134 +18,210 @@ A base de dados está em inglês e possui quatro tabelas: city (cidades), custom
 </p>
 
 ### 2. Respondendo às perguntas de negócio
-* Verificação e tratamento de valores nulos
-```sql
--- VISÃO GERAL DOS DADOS
-SELECT * FROM retail_sales
 
--- VERIFICANDO VALORES NULOS
--- No processo de importação dos dados, valores nulos foram convertidos em 0
-SELECT * FROM retail_sales
-WHERE customer_id = 0
-OR gender = '0'
-OR age = 0
-OR category = '0'
-OR quantity = 0
-OR price_per_unit = 0
-OR cogs = 0
-OR total_sale = 0
-
--- DELETANDO VALORES NULOS
--- Foram deletadas 13 linhas com valores nulos numa ou mais das colunas abaixo
--- Antes da exclusão, foi verificado na base de dados original se todos os valores 0 eram de fato os nulos,
--- o que foi confirmado
-DELETE FROM retail_sales
-WHERE customer_id = '0'
-OR gender = '0'
-OR age = '0'
-OR category = '0'
-OR quantity = '0'
-OR price_per_unit = '0'
-OR cogs = '0'
-OR total_sale = '0'
+1. Quantos clientes por cidade nós temos?
+  ```sql
+SELECT
+	ci.city_name AS cidade,
+	COUNT(DISTINCT cs.customer_id) AS total_clientes
+FROM city as ci
+LEFT JOIN
+customers as cs
+ON cs.city_id = ci.city_id
+GROUP BY ci.city_name
+ORDER BY total_clientes DESC
 ```
 
-### 3. Análise exploratória dos dados
-Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
-1. Qual o total de vendas?
+2. Qual é o valor médio de receita por cliente em cada cidade?
   ```sql
--- Contamos com um total de 1987 vendas
-SELECT COUNT(*) AS total_vendas
-FROM retail_sales
-```
-2. Qual o total de clientes?
-  ```sql
--- Contamos com um total 155 clientes
-SELECT COUNT(DISTINCT customer_id) AS total_clientes
-FROM retail_sales
-```
-3. Quantas e quais são as categorias dos nossos produtos?
-  ```sql
--- Contamos com 3 categorias: Clothing, Eletronics e Beauty
-SELECT DISTINCT category
-FROM retail_sales
-```
-4. Qual o faturamento total?
-  ```sql
-O faturamento total é de 908.230 dólares
-SELECT SUM(total_sale) AS faturamento_total
-FROM retail_sales
+SELECT
+	ci.city_name AS cidade,
+	SUM(total) AS receita_total,
+	COUNT(DISTINCT s.customer_id) AS total_clientes,
+	FORMAT(SUM(total)/COUNT(DISTINCT s.customer_id), 'N2') AS receita_media_por_cliente
+FROM sales AS s
+JOIN customers AS cs
+ON s.customer_id = cs.customer_id
+JOIN city as ci
+ON ci.city_id = cs.city_id
+GROUP BY ci.city_name
+ORDER BY receita_total DESC
 ```
 
-### 4. Análise dos dados e solução de problemas de negócios
-Aqui, serão respondidas uma série de perguntas de negócio para entendermos os principais fatores que
-impactam as vendas e faturamento, considerando o perfil dos clientes, categoria dos produtos e o período de venda
-
-1. Qual categoria foi a mais comprada por nossos clientes e qual o valor total?
+3. Quantas unidades de cada produto foram vendidas?
   ```sql
--- A categoria mais compra foi Clothing: 698 vendas (35,13% do total).
--- Considerando o faturamento, a categoria Eletronics teve maior rendimento: 311.445 dólares (34,29% do total).
-SELECT category,
-	COUNT(*) AS total_pedidos,
-	SUM(total_sale) AS valor_total
-FROM retail_sales
-GROUP BY category 
+SELECT
+	p.product_name AS produto,
+	COUNT(s.sale_id) AS total_pedidos
+FROM products AS p
+LEFT JOIN
+sales AS s
+ON s.product_id = p.product_id
+GROUP BY p.product_name
 ORDER BY total_pedidos DESC
 ```
 
-2. A quantidade de vendas e o faturamento apresenta grande diferença por gênero?
+4. Quais são os três produtos mais vendidos em cada cidade?
   ```sql
--- Não. Tanto o gênero feminino quanto masculino têm impacto semelhante nas vendas e faturamento:
--- Feminino: 1012 pedidos (50.93% do total de vendas); Valor total de 463.110 dólares (50.99% do faturamento);
--- Masculino: 975 pedidos (49,07% do total de vendas); Valor total de 445.120 dólares (49,01% do faturamento).
-SELECT gender,
-COUNT(*) AS total_pedidos,
-	SUM(total_sale) AS valor_total
-FROM retail_sales
-GROUP BY gender 
-ORDER BY valor_total DESC
-```
-
-3. Gere uma amostra de transações com valor total igual ou maior a 1000
-  ```sql
---Arquivo gerado como "sales_equals_higher_1000.csv".
 SELECT *
-FROM retail_sales
-WHERE total_sale >= 1000
-ORDER BY total_sale ASC
+FROM
+(
+	SELECT ci.city_name AS cidade,
+		p.product_name AS produto,
+		COUNT(s.sale_id) AS total_pedidos,
+		DENSE_RANK() OVER(PARTITION BY ci.city_name ORDER BY COUNT(s.sale_id) DESC) AS ranking
+	FROM sales AS s
+	JOIN
+	products AS p
+	ON s.product_id = p.product_id
+	JOIN customers as cs
+	ON cs.customer_id = s.customer_id
+	JOIN city as ci
+	ON ci.city_id = cs.city_id
+	GROUP BY ci.city_name, p.product_name
+) AS rank_pedidos
+WHERE ranking <= 3
 ```
 
-4. Quais os 5 clientes que mais compraram conosco?
+5. Forneça o valor médio de vendas e aluguel estimado por cliente, de cada cidade.
   ```sql
--- Os clientes de maior valor do período foram os de ID: 3, 1, 5, 2 e 4.
-SELECT TOP 5 customer_id,
-	SUM(total_sale) as valor_total
-FROM retail_sales
-GROUP BY customer_id
-ORDER BY valor_total DESC
+SELECT
+	ci.city_name AS cidade,
+	ci.estimated_rent AS aluguel_estimado,
+	COUNT(DISTINCT s.customer_id) AS total_clientes,
+	ROUND(SUM(s.total) * 1.0 / COUNT(DISTINCT s.customer_id), 2) AS receita_media_cliente,
+	ROUND(ci.estimated_rent * 1.0 / COUNT(DISTINCT cs.customer_id), 2) AS aluguel_medio_cliente
+FROM sales AS s
+JOIN customers AS cs
+ON s.customer_id = cs.customer_id
+JOIN city as ci
+ON ci.city_id = cs.city_id
+GROUP BY ci.city_name, ci.estimated_rent
+ORDER BY receita_media_cliente DESC
 ```
 
-5. Qual o total de vendas, considerando o gênero dos clientes e categoria dos produtos?
+6. Qual a estimativa, por cidade, do consumo de café, considerando o comportamento de 25% da populaçã
   ```sql
-SELECT category,
-	gender,
-	COUNT(*) AS total_vendas
-	FROM retail_sales
-GROUP BY category, gender
-ORDER BY total_vendas DESC
+SELECT
+	city_name AS cidade,
+	population AS populacao,
+	FORMAT((population * 0.25) / 1000000, 'N2') AS estimativa_consumo_milhoes
+FROM city
+ORDER BY populacao DESC
 ```
 
-6. Qual a média de idade dos clientes que compram na categoria 'Beauty', do gênero feminino?
+7. Gere uma lista de cidades com seus clientes e estimativa de consumidores de café.
   ```sql
--- De acordo com a categoria Beauty, a média de idade pa é de 40 anos para o gênero feminino.
 SELECT 
-	category,
-	gender,
-	ROUND(AVG(age), 2) AS media_idade
-FROM retail_sales
-WHERE category = 'Beauty' AND gender = 'Female'
-GROUP BY gender, category
-ORDER BY gender
+	ci.city_name AS cidade,
+	COUNT(DISTINCT cs.customer_id) as cont_distinta_clientes,
+	FORMAT((ci.population * 0.25) / 1000000, 'N2') AS estimativa_consumo_milhoes
+FROM sales as s
+JOIN customers as cs
+ON cs.customer_id = s.customer_id
+JOIN city as ci
+ON ci.city_id = cs.city_id
+GROUP BY ci.city_name, ci.population
+ORDER BY (ci.population * 0.25) / 1000000 DESC
+```
+
+8. Qual é a receita total das vendas, considerando todas as cidades, no último trimestre de 2023?
+  ```sql
+SELECT
+	ci.city_name AS cidade,
+	SUM(total) AS receita_total
+FROM sales AS s
+JOIN customers AS cs
+ON s.customer_id = cs.customer_id
+JOIN city as ci
+ON ci.city_id = cs.city_id
+WHERE
+	DATEPART(YEAR, s.sale_date) = 2023
+	AND
+	DATEPART(QUARTER, s.sale_date) = 4
+GROUP BY ci.city_name
+ORDER BY receita_total DESC
+```
+
+9. Informe as taxas de crescimento ou declínio nas vendas de café, ao longo do período
+  ```sql
+WITH vendas_mensais AS
+(
+	SELECT 
+		ci.city_name AS cidade,
+		DATEPART(MONTH, sale_date) AS mes_venda,
+		DATEPART(YEAR, sale_date) AS ano_venda,
+		SUM(s.total) AS valor_vendas
+	FROM sales AS s
+	JOIN customers AS cs
+	ON cs.customer_id = s.customer_id
+	JOIN city AS ci
+	ON ci.city_id = cs.city_id
+	GROUP BY ci.city_name, DATEPART(MONTH, sale_date), DATEPART(YEAR, sale_date)
+),
+taxa_crescimento
+AS
+(
+	SELECT
+		cidade,
+		mes_venda,
+		ano_venda,
+		valor_vendas,
+		LAG(valor_vendas, 1) OVER(PARTITION BY cidade ORDER BY ano_venda, mes_venda) AS ultimo_mes_vendas
+	FROM vendas_mensais
+)
+
+SELECT
+	cidade,
+	mes_venda,
+	ano_venda,
+	valor_vendas,
+	ultimo_mes_vendas,
+	ROUND((valor_vendas - ultimo_mes_vendas)/ultimo_mes_vendas * 100, 2) AS taxa_cresc
+FROM taxa_crescimento
+WHERE ultimo_mes_vendas IS NOT NULL
+```
+
+10. Identifique as 3  cidades com a maior receita média por cliente. Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
+  ```sql
+WITH cidade_receita
+AS
+(
+	SELECT
+		ci.city_name AS cidade,
+		SUM(s.total) as receita_total,
+		COUNT(DISTINCT s.customer_id) as total_clientes,
+		ROUND(SUM(s.total)/COUNT(DISTINCT s.customer_id),2) as receita_media_por_cliente
+	FROM sales as s
+	JOIN customers as cs
+	ON s.customer_id = cs.customer_id
+	JOIN city as ci
+	ON ci.city_id = cs.city_id
+	GROUP BY ci.city_name
+),
+
+cidade_aluguel
+AS
+(
+	SELECT
+		city_name AS cidade, 
+		estimated_rent AS aluguel_estimado,
+		FORMAT((population * 0.25)/1000000, 'N2') as estimativa_consumo_milhoes
+	FROM city
+)
+
+SELECT TOP 3
+	ca.cidade AS cidade,
+	receita_total,
+	cr.total_clientes,
+	ca.aluguel_estimado,
+	cr.receita_media_por_cliente,
+	FORMAT(ca.aluguel_estimado/cr.total_clientes, 'N2') as aluguel_medio_estimado,
+	estimativa_consumo_milhoes
+FROM cidade_aluguel as ca
+JOIN cidade_receita as cr
+ON ca.cidade = cr.cidade
+ORDER BY receita_total DESC
 ```
 
 7. Gere uma amostra das vendas realizadas em maio de 2022
@@ -155,65 +231,6 @@ SELECT *
 FROM retail_sales
 WHERE sale_date LIKE '2022-05%'
 ORDER BY sale_date ASC
-```
-
-8. Retorne as transações de categoria 'Clothing', em que a quantidade vendida é mais que 10, no mês de novembro
-  ```sql
--- A quantidade máxima vendida da categoria 'Clothing' em novembro de 2022 é 4.
--- Não há quantidade de vendas maior ou igual a 10.
-SELECT *
-FROM retail_sales
-WHERE category = 'Clothing'
-	AND sale_date LIKE '2022-11%'
-	AND quantity >= 4
-```
-
-9. Indique o valor médio em vendas de cada mês
-  ```sql
-SELECT
-	DATEPART(yyyy, sale_date) AS ano_venda,
-	DATEPART(month, sale_date) AS mes_venda,
-	ROUND(AVG(total_sale), 2) AS total_vendas
-FROM retail_sales
-GROUP BY DATEPART(yyyy, sale_date), DATEPART(month, sale_date)
-ORDER BY ano_venda, total_vendas DESC
-```
-
-10. Qual o mês de melhor desempenho em cada ano?
-  ```sql
--- 2022: mês de julho; 2023: mês de fevereiro
-SELECT * FROM
-(	
-	SELECT
-			DATEPART(yyyy, sale_date) AS ano_venda,
-			DATEPART(month, sale_date) AS mes_venda,
-			ROUND(AVG(total_sale), 2) AS total_vendas,
-			RANK() OVER(PARTITION BY DATEPART(yyyy, sale_date) ORDER BY ROUND(AVG(total_sale), 2) DESC) AS ranking
-	FROM retail_sales
-	GROUP BY DATEPART(yyyy, sale_date), DATEPART(month, sale_date)
-) AS resultado
-```
-
-11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações.
-    Considere: Manhã <=12; Tarde > 12, <=17; Noite > 17
-  ```sql
--- O turno da noite possui o maior número de transações: 1062 pedidos (53,45% do total).
-WITH horario_vendas
-AS(
-	SELECT *,
-		CASE
-			WHEN DATEPART(HOUR, sale_time) < 12 THEN 'Manhã'
-			WHEN DATEPART(HOUR, sale_time) BETWEEN 12 AND 17 THEN 'Tarde'
-			ELSE 'Noite'
-		END AS turno
-	FROM retail_sales
-)
-SELECT
-	turno,
-	COUNT(*) AS total_pedidos
-FROM horario_vendas
-GROUP BY turno
-ORDER BY total_pedidos DESC
 ```
 
 ### Dicionário dos Dados
