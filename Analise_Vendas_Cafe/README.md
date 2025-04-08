@@ -252,7 +252,7 @@ De acordo com a análise dos dados, segue quais as melhores cidades para novas l
    * **Coffee Beans (500g):** Terceira maior quantidade de vendas (1218) e segunda maior receita (730.800);
    * **Ground Espresso Coffee (250g):** Segunda maior quantidade de clientes (1271) e quarta maior receita (444.850);
    * **Instante Coffee Powder (100g):** Alta quantidade de vendas (1226) e faturamento considerável (306.500);
-   * **Coffee Gift Hamper:** Apesar da baixa quantida de vendas se comparado aos produtos anteriores (270), gerou a terceira maior receita (486.000).
+   * **Coffee Gift Hamper:** Apesar da baixa quantidade de vendas comparado aos produtos anteriores (270), gerou a terceira maior receita (486.000).
 
 ### Dicionário dos Dados
 
