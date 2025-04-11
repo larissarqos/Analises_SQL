@@ -1,7 +1,7 @@
 # Projeto SQL - Análise de Fraudes
 
 ## Contexto
-Uma empresa fictícia de e-commerce contou uma série de fraudes em suas compras. Preocupados com a proporção destas, eles desejam saber qual o impacto em seu faturamento e qual o perfil dessas operações.
+Uma empresa fictícia de e-commerce contou com uma série de fraudes em suas compras. Preocupados com a proporção destas, eles desejam saber qual o impacto em seu faturamento e qual o perfil dessas operações.
 
 ## Objetivos
 Atendendo à demanda da empresa, faremos uma análise das transações para identificar o perfil das fraudes e seu impacto no faturamento da empresa. Nos guiaremos através das perguntas abaixo:
