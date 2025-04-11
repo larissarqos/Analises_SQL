@@ -3,80 +3,105 @@ GO
 
 SELECT * FROM fraud_data
 
--- QUAL O TOTAL DE FRAUDES NO PERÍODO?
--- Há um total de 14.151 fraudes entre as transações.
--- 90.64% das transações são ok, enquanto 9.36% são fraudulentas
-SELECT class,
-COUNT(class) AS total_transacoes,
-COUNT(class) * 100.0 / (SELECT COUNT(class) FROM fraudes.dbo.fraud_data) AS porcentagem
+-- 1. Qual o total de fraudes no período avaliado?
+-- Há um total de 14.151 fraudes entre as transações, o equivalente a 9.36% do total
+SELECT
+	class AS classificacao,
+	COUNT(class) AS total_transacoes,
+	FORMAT(COUNT(class) * 100.0 / (SELECT COUNT(class) FROM fraudes.dbo.fraud_data), 'N2') AS porcentagem
 FROM fraudes.dbo.fraud_data
 GROUP BY class
 
--- QUAL O FATURAMENTO TOTAL E QUAL O VALOR DE FRAUDES
--- O faturamento total foi de R$5.057890,00. O total em fraudes foi de R$523.488,00
-SELECT class, SUM(CAST(purchase_value as int)) AS faturamento
-FROM fraudes.dbo.fraud_data
+-- 2.  Qual o impacto das fraudes no faturamento?
+-- O faturamento total foi de R$5.057890,00. O total em fraudes foi de R$523.488,00, pouco mais de 10% do total
+SELECT
+	class AS classificacao,
+	SUM(purchase_value) AS faturamento
+	FROM fraudes.dbo.fraud_data
 GROUP BY class
 
--- QUAL O FATURAMENTO TOTAL E QUAL O VALOR DE FRAUDES EM PORCENTAGEM
--- A porcentagem do valor em fraudes é próximo da porcetagem da contagem de fraudes
--- Isso indica que o comportamento das fraudes é muito próximo do comportamento das operações não fraudulentas
-SELECT class, SUM(CAST(purchase_value AS INT)) AS valor_vendas,
-SUM(CAST(purchase_value AS INT)) *100.0 / SUM(SUM(CAST(purchase_value AS INT))) OVER() AS porcentagem
-FROM fraudes.dbo.fraud_data
-GROUP BY class
+-- 3. Há diferença, no número de compras, entre operações comuns e fraudulentas?
+-- Vamos considerar o ID do cliente e o ID do aparelho.
+-- ID do cliente: Não encontramos relação entre a quantidade de compras e a classificação (se fraude ou não).
+-- ID do aparelho: Enquanto usuários comuns costumam realizar até 3 transações por aparelho,
+-- usuários fraudulentos realizam mais de 15 compras num mesmo aparelho.
 
--- MAIS DE UM USUÁRIO REALIZOU FRAUDE, CONSIDERANDO O ID DO USUÁRIO?
--- Não, cada fraude foi realizada por apenas um usuário.
-SELECT class, user_id, COUNT(*) AS contagem
+-- ID do cliente, compras normais
+SELECT
+	class AS classificacao,
+	user_id AS id_usuario,
+	COUNT(*) AS total_compras
+FROM fraudes.dbo.fraud_data
+GROUP BY class, user_id
+HAVING COUNT(*) = 1 AND class = 0
+ORDER BY total_compras DESC
+
+-- ID do cliente, compras fraudulentas
+SELECT
+	class AS classificacao,
+	user_id AS id_usuario,
+	COUNT(*) AS total_compras
 FROM fraudes.dbo.fraud_data
 GROUP BY class, user_id
 HAVING COUNT(*) = 1 AND class = 1
-ORDER BY contagem DESC
+ORDER BY total_compras DESC
 
--- MAIS DE UM USUÁRIO REALIZOU COMPRAS, CONSIDERANDO O APARELHO UTILIZADO?
--- Considerando o aparelho, usuários comuns fazem até 3 compras. Usuários fraudulentos compram mais de 15 vezes através de um mesmo dispositivo
--- Considerando que cada fraude tinha um ID diferente de usuário, a possibilidade é de que as fraudes operam gerando diferentes usuários através
--- de um mesmo aparelho
-
--- Compras realizadas por usuários comuns
-SELECT class, device_id, COUNT(*) AS contagem
+-- ID do aparelho, compras normais
+SELECT
+	class AS classificacao,
+	device_id AS id_aparelho,
+	COUNT(*) AS total_compras
 FROM fraudes.dbo.fraud_data
 GROUP BY class, device_id
 HAVING COUNT(*) > 1 AND class = 0
-ORDER BY contagem DESC
+ORDER BY total_compras DESC
 
--- Compras realizadas por usuários fraudulentos
-SELECT class, device_id, COUNT(*) AS contagem
+-- ID do aparelho, compras fraudulentas
+SELECT
+	class AS classificacao,
+	device_id AS id_usuario,
+	COUNT(*) AS total_compras
 FROM fraudes.dbo.fraud_data
 GROUP BY class, device_id
 HAVING COUNT(*) > 1 AND class = 1
-ORDER BY contagem DESC
+ORDER BY total_compras DESC
 
--- QUAL O INTERVALO NORMAL ENTRE CADASTRO E COMPRA NO SITE?
--- Compras fraudulentas, marjoritariamente, contam com cadastro e compra no mesmo dia, geralmente com 1s de diferença entre cadastro e compra
--- Isso indica uso de bots para realização dessas compras
+-- 4. Há diferença, no tempo de cadastro até a primeira compra, entre operações comuns e fraudulentas?
+-- Compras comuns: O tempo decorrido do cadastro até a primeira compra é no mínimo 130s (pouco mais de 2 minutos)
+-- Compras fraudulentas: Marjoritariamente, contam com cadastro e compra no mesmo dia, geralmente com 1s de diferença entre cadastro e compra,
+-- o que pode indicar uso de bots para realização dessas compras
 
 -- Tempo em dias entre cadastro e compra de operações fraudulentas
-SELECT class, signup_time, purchase_time,
-DATEDIFF (DAY, signup_time, purchase_time) AS Diferenca_Dias
+SELECT
+	class AS classificacao,
+	signup_time AS hora_cadastro,
+	purchase_time AS hora_compra,
+	DATEDIFF (DAY, signup_time, purchase_time) AS diferenca_dias
 FROM fraudes.dbo.fraud_data WHERE class = 1
 ORDER BY Diferenca_Dias ASC
 
 -- Tempo em dias entre cadastro e compra de operações comuns
-SELECT class, signup_time, purchase_time,
-DATEDIFF (DAY, signup_time, purchase_time) AS Diferenca_Dias
+SELECT class AS classificacao,
+	signup_time AS hora_cadastro,
+	purchase_time AS hora_compra,
+	DATEDIFF (DAY, signup_time, purchase_time) AS diferenca_dias
 FROM fraudes.dbo.fraud_data WHERE class = 0
 ORDER BY Diferenca_Dias ASC
 
 -- Tempo em segundos entre cadastro e compra de operações fraudulentas
-SELECT class, signup_time, purchase_time,
-DATEDIFF (SECOND, signup_time, purchase_time) AS Diferenca_Segundos
+SELECT
+	class AS classificacao,
+	signup_time AS hora_cadastro,
+	purchase_time AS hora_compra,
+	DATEDIFF (SECOND, signup_time, purchase_time) AS diferenca_segundos
 FROM fraudes.dbo.fraud_data WHERE class = 1
 ORDER BY Diferenca_Segundos ASC
 
 -- Tempo em segundos entre cadastro e compra de operações normais
-SELECT class, signup_time, purchase_time,
-DATEDIFF (SECOND, signup_time, purchase_time) AS Diferenca_Segundos
+SELECT
+	class AS classificacao,
+	signup_time AS hora_assinatura,
+	purchase_time AS hora_compra,
+	DATEDIFF (SECOND, signup_time, purchase_time) AS diferenca_segundos
 FROM fraudes.dbo.fraud_data WHERE class = 0
 ORDER BY Diferenca_Segundos ASC
