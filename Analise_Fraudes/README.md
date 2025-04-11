@@ -11,6 +11,7 @@ Atendendo à demanda da empresa, faremos uma análise das transações para iden
 * Que navegador é mais utilizado nas fraudes?
 * Há diferença, no número de compras, entre operações comuns e fraudulentas?
 * Há diferença, no tempo de cadastro até a primeira compra, entre operações comuns e fraudulentas?
+* Qual o perfil de cliente mais comum nas operações fraudulentas?
 
 ## Estrutura do Projeto
 ### 1. Banco de dados
