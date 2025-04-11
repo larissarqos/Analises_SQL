@@ -1,7 +1,7 @@
 <h1 align="center">Análise de Expansão de Negócios</h1>
 
 ## Contexto
-Uma rede fictícia de lojas de café deseja ampliar seus negócios, para isso, deseja saber quais as melhores cidades para abertura de filiais, assim como quais os melhores produtos.
+Uma rede fictícia de lojas de café deseja ampliar seus negócios, para isso, deseja saber quais as melhores cidades para abertura de filiais, assim como quais os melhores produtos para venda.
 
 ## Objetivos
 Para identificar os melhores locais e produtos para expansão da rede, responderemos a uma série de perguntas de negócio, voltadas a atender a três pontos chave para essa identificação:
