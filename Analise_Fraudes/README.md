@@ -65,7 +65,6 @@ ORDER BY COUNT(*) DESC
 ```
 4. Há diferença, no número de compras, entre operações comuns e fraudulentas?
    Aqui, vamos considerar o ID do cliente e o ID do aparelho.
-   
    * De acordo com o ID do cliente: Não encontramos relação entre a quantidade de compras e a classificação (se fraude ou não).
   ```sql
 -- ID do cliente, compras normais
