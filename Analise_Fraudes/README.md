@@ -31,7 +31,6 @@ A base de dados está em inglês e se encontra em anexo como "fraud_data.csv". A
 | class | Classificação da operação: 1 para fraudulenta, 0 para não fraudulenta | varchar(5) |
 
 ### 3. Respondendo perguntas de negócio
-Para realizar a análise que nos ajudará a entender melhor as fraudes, responderemos a uma série de perguntas.
 1.  Qual o total de fraudes no período avaliado?
   ```sql
 -- Há um total de 14.151 fraudes entre as transações, o equivalente a 9.36% do total
@@ -64,45 +63,107 @@ GROUP BY browser
 ORDER BY COUNT(*) DESC
 ```
 4. Há diferença, no número de compras, entre operações comuns e fraudulentas?
-   * Vamos considerar o ID do cliente e o ID do aparelho.
-ID do cliente: Não encontramos relação entre a quantidade de compras e a classificação (se fraude ou não).
-| Operações Comuns | Operações Fraudulentas |
-|----------|----------|
-|   ```sql
-O faturamento total é de 908.230 dólares
-SELECT SUM(total_sale) AS faturamento_total
-FROM retail_sales
-``` |  opa |
-
-
-
-
+   Aqui, vamos considerar o ID do cliente e o ID do aparelho.
+   * De acordo com o ID do cliente: Não encontramos relação entre a quantidade de compras e a classificação (se fraude ou não).
   ```sql
--- Contamos com 3 categorias: Clothing, Eletronics e Beauty
-SELECT DISTINCT category
-FROM retail_sales
+-- ID do cliente, compras normais
+SELECT
+	class AS classificacao,
+	user_id AS id_usuario,
+	COUNT(*) AS total_compras
+FROM fraudes.dbo.fraud_data
+GROUP BY class, user_id
+HAVING COUNT(*) = 1 AND class = 0
+ORDER BY total_compras DESC
 ```
-5. Qual a relação do tempo de cadastro até a primeira compra nas operações fraudulentas?
   ```sql
-O faturamento total é de 908.230 dólares
-SELECT SUM(total_sale) AS faturamento_total
-FROM retail_sales
+-- ID do cliente, compras fraudulentas
+SELECT
+	class AS classificacao,
+	user_id AS id_usuario,
+	COUNT(*) AS total_compras
+FROM fraudes.dbo.fraud_data
+GROUP BY class, user_id
+HAVING COUNT(*) = 1 AND class = 1
+ORDER BY total_compras DESC
 ```
-
-
-6. Qual categoria foi a mais comprada por nossos clientes e qual o valor total?
+  * De acordo com o ID do aparelho: Enquanto usuários comuns costumam realizar até 3 transações por aparelho, usuários fraudulentos realizam mais de 15 compras num mesmo aparelho.
   ```sql
--- A categoria mais compra foi Clothing: 698 vendas (35,13% do total).
--- Considerando o faturamento, a categoria Eletronics teve maior rendimento: 311.445 dólares (34,29% do total).
-SELECT category,
-	COUNT(*) AS total_pedidos,
-	SUM(total_sale) AS valor_total
-FROM retail_sales
-GROUP BY category 
-ORDER BY total_pedidos DESC
+-- ID do aparelho, compras normais
+SELECT
+	class AS classificacao,
+	device_id AS id_aparelho,
+	COUNT(*) AS total_compras
+FROM fraudes.dbo.fraud_data
+GROUP BY class, device_id
+HAVING COUNT(*) > 1 AND class = 0
+ORDER BY total_compras DESC
+```
+  ```sql
+-- ID do aparelho, compras fraudulentas
+SELECT
+	class AS classificacao,
+	device_id AS id_usuario,
+	COUNT(*) AS total_compras
+FROM fraudes.dbo.fraud_data
+GROUP BY class, device_id
+HAVING COUNT(*) > 1 AND class = 1
+ORDER BY total_compras DESC
 ```
 
+5. Há diferença, no tempo de cadastro até a primeira compra, entre operações comuns e fraudulentas?
+ * Compras comuns: O tempo decorrido do cadastro até a primeira compra é no mínimo 130s (pouco mais de 2 minutos)
+  ```sql
+-- Tempo em segundos entre cadastro e compra de operações normais
+SELECT
+	class AS classificacao,
+	signup_time AS hora_assinatura,
+	purchase_time AS hora_compra,
+	DATEDIFF (SECOND, signup_time, purchase_time) AS diferenca_segundos
+FROM fraudes.dbo.fraud_data WHERE class = 0
+ORDER BY Diferenca_Segundos ASC
+```
 
+ * Compras fraudulentas: Marjoritariamente, contam com cadastro e compra no mesmo dia, geralmente com 1s de diferença entre cadastro e compra, o que pode indicar uso de bots para realização dessas compras
+  ```sql
+-- Tempo em segundos entre cadastro e compra de operações fraudulentas
+SELECT
+	class AS classificacao,
+	signup_time AS hora_cadastro,
+	purchase_time AS hora_compra,
+	DATEDIFF (SECOND, signup_time, purchase_time) AS diferenca_segundos
+FROM fraudes.dbo.fraud_data WHERE class = 1
+ORDER BY Diferenca_Segundos ASC
+```
 
-
-
+6. Qual o perfil de cliente mais comum nas operações fraudulentas?
+  ```sql
+-- O perfil mais comum em fraudes é do sexo masculino, com idade entre 26-35 anos.
+-- No entanto, esse também é o perfil geral predominante de clientes da empresa, então não é possível estabelecer uma relação "perfil cliente x fraude"
+WITH perfil_fraude AS (
+  SELECT
+    class AS classificacao,
+    sex AS genero,
+    CASE
+      WHEN age BETWEEN 18 AND 25 THEN '18-25'
+      WHEN age BETWEEN 26 AND 35 THEN '26-35'
+      WHEN age BETWEEN 36 AND 50 THEN '36-50'
+      ELSE '50+'
+    END AS faixa_etaria
+  FROM fraud_data
+  WHERE class = 1
+),
+ranking_fraude AS (
+  SELECT
+    genero,
+    faixa_etaria,
+    COUNT(*) AS total_compras,
+    RANK() OVER(ORDER BY COUNT(*) DESC) AS ranking
+  FROM perfil_fraude
+  GROUP BY genero, faixa_etaria
+)
+SELECT *
+FROM ranking_fraude
+WHERE ranking <= 4
+ORDER BY ranking
+```
