@@ -26,8 +26,8 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 | total | Receita total (unit_price * quantity) | float |
 
 ### 2. Limpeza dos dados
+* Visão geral da base de dados
 ```python
-# == Visão geral da base de dados ==
 # Head
 df.head()
 
@@ -39,8 +39,10 @@ df.describe()
 
 # Info
 df.info()
+```
 
-# == Limpeza ==
+* Limpeza
+```python
 # Identificando dados duplicados
 df.duplicated().sum()
 
@@ -54,15 +56,19 @@ df.isnull().sum()
 # Removendo valores nulos
 df.dropna(inplace = True)
 df.isnull().sum()
+```
 
-# == Verificando base de dados após limpeza ==
+* Verificando base de dados após limpeza
+```python
 # Shape
 df.shape
 
 # Tipo dos dados
 df.dtypes
+```
 
-# == Ajustando informações ==
+* Ajustando informações
+```python
 # Convertendo o tipo object para float da coluna unit_price. Para isso removeremos o '$'
 df['unit_price'] = df['unit_price'].str.replace('$', '').astype(float)
 
