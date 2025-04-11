@@ -54,7 +54,7 @@ GROUP BY class
 3. Que navegador é o mais utilizado nas fraudes?
   ```sql
 -- Os navegadores mais utilizados nas fraudes têm uma mesma proporção dos utilizados nas operações comuns
--- Logo, não é possível estabelecer uma relação entre o navegador e as atividades fraudulentas
+-- Logo, não é possível estabelecer uma relação "navegador x fraudes"
 SELECT
 	browser,
 	COUNT(*) AS total_fraudes
@@ -141,7 +141,7 @@ ORDER BY Diferenca_Segundos ASC
   ```sql
 -- O perfil mais comum em fraudes é do sexo masculino, com idade entre 26-35 anos.
 -- No entanto, esse também é o perfil geral predominante de clientes da empresa,
--- então não é possível estabelecer uma relação "perfil cliente x fraude"
+-- então não é possível estabelecer uma relação "perfil cliente x fraudes"
 WITH perfil_fraude AS (
   SELECT
     class AS classificacao,
