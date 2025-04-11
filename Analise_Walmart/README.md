@@ -4,7 +4,7 @@
 O projeto busca analisar um recorte de vendas do Walmart (dados retirados do Kaggle), levando em consideração filiais, categorias de produtos e métodos de pagamento, para identificar o desempenho de cada um desses fatores e suas relações.
 
 ## Objetivos
-Iniciaremos realizando uma análise exploratória dos dados para entender melhor as informações disponíveis e então responderemos a uma série de perguntas de negócio, listadas abaixo:
+Iniciaremos realizando uma limpeza e tratamento dos dados através do Python e então análise exploratória dos dados para entender melhor as informações disponíveis, seguida da resolução de problemas de negócio.
 
 ## Estrutura do Projeto
 ### 1. Banco de dados
@@ -12,214 +12,273 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 
 | Coluna | Descrição | Tipo de Dado |
 |----------|----------|----------|
-| transactions_id | ID da venda  | varchar (chave primária da tabela)  |
-| sale_date   | Data da venda   | date  |
-| sale_time   | Hora da venda   | time(7)   |
-| customer_id   | ID do cliente   | varchar(50)  |
-| gender  | Gênero  | varchar(20)   |
-| age   | Idade   | int  |
-| category  | Categoria   | varchar(20)  |
-| quantity   | Quantidade   | int   |
-| price_per_unit   | Preço por unidade  | float   |
-| cogs   | Custo por unidade   | float   |
-| total_sale   | Valor total da venda   | float   |
+| invoice_id | ID da venda | varchar(15), chave primária da tabela |
+| branch | Filial | varchar(15) |
+| city | Cidade | varchar(30) |
+| category | Categoria do produto | varchar(20)  |
+| unit_price | Preço unitário do produto | float |
+| quantity | Quantidade vendida | int |
+| date | Data da venda | date |
+| time | Hora da venda | time(7) |
+| payment_method | Método de pagamento | varchar(15) |
+| rating | Avaliação do produto | float |
+| profit_margin | Margem de lucro | float   |
+| total | Receita total (unit_price * quantity) | float |
 
 ### 2. Limpeza dos dados
-* Verificação e tratamento de valores nulos
-```sql
--- VISÃO GERAL DOS DADOS
-SELECT * FROM retail_sales
+```python
+# == Visão geral da base de dados ==
+# Head
+df.head()
 
--- VERIFICANDO VALORES NULOS
--- No processo de importação dos dados, valores nulos foram convertidos em 0
-SELECT * FROM retail_sales
-WHERE customer_id = 0
-OR gender = '0'
-OR age = 0
-OR category = '0'
-OR quantity = 0
-OR price_per_unit = 0
-OR cogs = 0
-OR total_sale = 0
+# Shape
+df.shape
 
--- DELETANDO VALORES NULOS
--- Foram deletadas 13 linhas com valores nulos numa ou mais das colunas abaixo
--- Antes da exclusão, foi verificado na base de dados original se todos os valores 0 eram de fato os nulos,
--- o que foi confirmado
-DELETE FROM retail_sales
-WHERE customer_id = '0'
-OR gender = '0'
-OR age = '0'
-OR category = '0'
-OR quantity = '0'
-OR price_per_unit = '0'
-OR cogs = '0'
-OR total_sale = '0'
+# Describe
+df.describe()
+
+# Info
+df.info()
+
+# == Limpeza ==
+# Identificando dados duplicados
+df.duplicated().sum()
+
+# Removendo duplicadas
+df.drop_duplicates(inplace = True)
+df.duplicated().sum()
+
+# Identificando valores nulos
+df.isnull().sum()
+
+# Removendo valores nulos
+df.dropna(inplace = True)
+df.isnull().sum()
+
+# == Verificando base de dados após limpeza ==
+# Shape
+df.shape
+
+# Tipo dos dados
+df.dtypes
+
+# == Ajustando informações ==
+# Convertendo o tipo object para float da coluna unit_price. Para isso removeremos o '$'
+df['unit_price'] = df['unit_price'].str.replace('$', '').astype(float)
+
+# Criando coluna com valor total das vendas (unit_price * quantitiy)
+df['total'] = df['unit_price'] * df['quantity']
+df.head()
+
+# Ajustando o nome das colunas para tudo com letra minúscula
+df.columns = df.columns.str.lower()
+df.head()
+
+# Exportando dados tratados
+df.to_csv('walmart_data_cleaned.csv', index  = False)
 ```
 
 ### 3. Análise exploratória dos dados
-Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
-1. Qual o total de vendas?
+1. Qual o total de transações analisadas?
   ```sql
--- Contamos com um total de 1987 vendas
-SELECT COUNT(*) AS total_vendas
-FROM retail_sales
+-- Contamos com 9.969 transações
+SELECT COUNT(*)
+FROM walmart_data
 ```
-2. Qual o total de clientes?
+
+2. Quais os tipos de pagamento?
   ```sql
--- Contamos com um total 155 clientes
-SELECT COUNT(DISTINCT customer_id) AS total_clientes
-FROM retail_sales
+-- Há 3 tipos de pagamento: Credit card, Ewallet e Cash
+SELECT
+	payment_method AS metodo_pagamento,
+	COUNT(*) AS total
+FROM walmart_data
+GROUP BY payment_method
+ORDER BY total DESC
 ```
-3. Quantas e quais são as categorias dos nossos produtos?
+
+3. Qual o total de filiais?
   ```sql
--- Contamos com 3 categorias: Clothing, Eletronics e Beauty
-SELECT DISTINCT category
-FROM retail_sales
+-- Contamos com 100 filiais
+SELECT
+	COUNT(DISTINCT branch) AS total_filiais
+FROM walmart_data
 ```
-4. Qual o faturamento total?
+
+4. Qual a quantidade máxima de itens comprados por venda?
   ```sql
-O faturamento total é de 908.230 dólares
-SELECT SUM(total_sale) AS faturamento_total
-FROM retail_sales
+-- A quantidade máxima de itens comprados por venda foi 10
+SELECT MAX(quantity) AS qtd_maxima
+FROM walmart_data
+```
+
+5. Qual a quantidade mínima de itens comprados por venda?
+  ```sql
+-- A quantidade mínima de itens comprados por venda foi 1
+SELECT MIN(quantity) As qtd_minima
+FROM walmart_data
 ```
 
 ### 4. Análise dos dados e solução de problemas de negócios
-Aqui, serão respondidas uma série de perguntas de negócio para entendermos os principais fatores que
-impactam as vendas e faturamento, considerando o perfil dos clientes, categoria dos produtos e o período de venda
-
-1. Qual categoria foi a mais comprada por nossos clientes e qual o valor total?
+1. Qual o método de pagamento mais utilizado? Indique também a quantidade vendida por método
   ```sql
--- A categoria mais compra foi Clothing: 698 vendas (35,13% do total).
--- Considerando o faturamento, a categoria Eletronics teve maior rendimento: 311.445 dólares (34,29% do total).
-SELECT category,
-	COUNT(*) AS total_pedidos,
-	SUM(total_sale) AS valor_total
-FROM retail_sales
-GROUP BY category 
-ORDER BY total_pedidos DESC
+-- O método mais utilizado é Credit card, possuindo também a maior quantia de vendas (9.567)
+SELECT
+	payment_method AS metodo_pagamento,
+	COUNT(*) AS qtd_pagamentos,
+	SUM(quantity) AS qtd_vendida
+FROM walmart_data
+GROUP BY payment_method
+ORDER BY qtd_pagamentos DESC
 ```
 
-2. A quantidade de vendas e o faturamento apresenta grande diferença por gênero?
+2. Qual a receita por tipo de pagamento?
   ```sql
--- Não. Tanto o gênero feminino quanto masculino têm impacto semelhante nas vendas e faturamento:
--- Feminino: 1012 pedidos (50.93% do total de vendas); Valor total de 463.110 dólares (50.99% do faturamento);
--- Masculino: 975 pedidos (49,07% do total de vendas); Valor total de 445.120 dólares (49,01% do faturamento).
-SELECT gender,
-COUNT(*) AS total_pedidos,
-	SUM(total_sale) AS valor_total
-FROM retail_sales
-GROUP BY gender 
-ORDER BY valor_total DESC
+-- Credit card: 488.821,02; Ewallet: 457.316,07; Cash: 263.589,29
+SELECT
+	payment_method AS metodo_pagamento,
+	SUM(total) AS receita
+FROM walmart_data
+GROUP BY payment_method
+ORDER BY receita DESC
 ```
 
-3. Gere uma amostra de transações com valor total igual ou maior a 1000
+3. Qual o método de pagamento mais utilizado em cada filial?
   ```sql
---Arquivo gerado como "sales_equals_higher_1000.csv".
 SELECT *
-FROM retail_sales
-WHERE total_sale >= 1000
-ORDER BY total_sale ASC
+FROM
+	(SELECT
+		branch AS filial,
+		payment_method AS metodo_pagamento,
+		COUNT(*) AS total_transacoes,
+		RANK() OVER(PARTITION BY Branch ORDER BY COUNT(*) DESC) AS ranking
+	FROM walmart_data
+	GROUP BY branch, payment_method
+) AS ranking_metodo_pagamento
+WHERE ranking = 1
 ```
-
-4. Quais os 5 clientes que mais compraram conosco?
+4. Qual a categoria mais bem avaliada em cada filial?
   ```sql
--- Os clientes de maior valor do período foram os de ID: 3, 1, 5, 2 e 4.
-SELECT TOP 5 customer_id,
-	SUM(total_sale) as valor_total
-FROM retail_sales
-GROUP BY customer_id
-ORDER BY valor_total DESC
-```
-
-5. Qual o total de vendas, considerando o gênero dos clientes e categoria dos produtos?
-  ```sql
-SELECT category,
-	gender,
-	COUNT(*) AS total_vendas
-	FROM retail_sales
-GROUP BY category, gender
-ORDER BY total_vendas DESC
-```
-
-6. Qual a média de idade dos clientes que compram na categoria 'Beauty', do gênero feminino?
-  ```sql
--- De acordo com a categoria Beauty, a média de idade pa é de 40 anos para o gênero feminino.
-SELECT 
-	category,
-	gender,
-	ROUND(AVG(age), 2) AS media_idade
-FROM retail_sales
-WHERE category = 'Beauty' AND gender = 'Female'
-GROUP BY gender, category
-ORDER BY gender
-```
-
-7. Gere uma amostra das vendas realizadas em maio de 2022
-  ```sql
--- Arquivo gerado como "sale_05_2022.csv".
 SELECT *
-FROM retail_sales
-WHERE sale_date LIKE '2022-05%'
-ORDER BY sale_date ASC
+FROM
+(	SELECT
+		branch AS filial,
+		category AS categoria,
+		ROUND(AVG(rating), 2) AS avaliacao_media,
+		RANK() OVER(PARTITION BY branch ORDER BY AVG(rating) DESC) AS ranking
+	FROM walmart_data
+	GROUP BY branch, category
+) AS ranking_por_filial
+WHERE ranking = 1
 ```
 
-8. Retorne as transações de categoria 'Clothing', em que a quantidade vendida é mais que 10, no mês de novembro
+5. Qual dia da semana possui mais transações? Avalie por filial
   ```sql
--- A quantidade máxima vendida da categoria 'Clothing' em novembro de 2022 é 4.
--- Não há quantidade de vendas maior ou igual a 10.
 SELECT *
-FROM retail_sales
-WHERE category = 'Clothing'
-	AND sale_date LIKE '2022-11%'
-	AND quantity >= 4
+FROM
+	(SELECT
+		branch AS filial,
+		DATENAME(WEEKDAY, date) AS dia,
+		COUNT(*) AS total_transacoes,
+		RANK() OVER(PARTITION BY branch ORDER BY COUNT(*) DESC) AS ranking
+	FROM walmart_data
+	GROUP BY branch, DATENAME(WEEKDAY, date)
+) AS ranking_por_dia
+WHERE ranking = 1
 ```
 
-9. Indique o valor médio em vendas de cada mês
+6. Quais os valores médio, mínimo e máximo das avaliações de categoria dos produtos, por cidade?
   ```sql
 SELECT
-	DATEPART(yyyy, sale_date) AS ano_venda,
-	DATEPART(month, sale_date) AS mes_venda,
-	ROUND(AVG(total_sale), 2) AS total_vendas
-FROM retail_sales
-GROUP BY DATEPART(yyyy, sale_date), DATEPART(month, sale_date)
-ORDER BY ano_venda, total_vendas DESC
+	city AS cidade,
+	category AS categoria,
+	MIN(rating) AS nota_minima,
+	MAX(rating) AS nota_maxima,
+	ROUND(AVG(rating), 2) AS media_nota
+FROM walmart_data
+GROUP BY city, category
+ORDER BY city, category
 ```
 
-10. Qual o mês de melhor desempenho em cada ano?
+7. Quais os 3 meses com maior receita média no último ano?
   ```sql
--- 2022: mês de julho; 2023: mês de fevereiro
 SELECT * FROM
 (	
 	SELECT
-			DATEPART(yyyy, sale_date) AS ano_venda,
-			DATEPART(month, sale_date) AS mes_venda,
-			ROUND(AVG(total_sale), 2) AS total_vendas,
-			RANK() OVER(PARTITION BY DATEPART(yyyy, sale_date) ORDER BY ROUND(AVG(total_sale), 2) DESC) AS ranking
-	FROM retail_sales
-	GROUP BY DATEPART(yyyy, sale_date), DATEPART(month, sale_date)
+			DATEPART(YEAR, date) AS ano,
+			DATENAME(MONTH, date) AS mes,
+			ROUND(AVG(total), 2) AS receita_media,
+			RANK() OVER(PARTITION BY DATEPART(YEAR, date) ORDER BY ROUND(AVG(total), 2) DESC) AS ranking
+	FROM walmart_data
+	GROUP BY DATEPART(YEAR, date), DATENAME(MONTH, date)
 ) AS resultado
+WHERE ano = 2023 AND ranking IN (1, 2, 3)
 ```
 
-11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações.
-    Considere: Manhã <=12; Tarde > 12, <=17; Noite > 17
+8. Qual a margem total de lucro para cada categoria? Considere: Margem de lucro total = (total * profit_margin)
   ```sql
--- O turno da noite possui o maior número de transações: 1062 pedidos (53,45% do total).
-WITH horario_vendas
-AS(
-	SELECT *,
+SELECT
+	category AS categoria,
+	SUM(total) as receita_total,
+	ROUND(SUM(total * profit_margin), 2) AS margem_lucro
+FROM walmart_data
+GROUP BY category
+ORDER BY receita_total DESC
+```
+
+9. Qual o total de transações de acordo com o turno (manhã, tarde e noite), em cada filial?
+  ```sql
+SELECT
+	branch AS filial,
+	turno,
+	COUNT(*) AS total
+FROM (
+	SELECT
+		branch,
 		CASE
-			WHEN DATEPART(HOUR, sale_time) < 12 THEN 'Manhã'
-			WHEN DATEPART(HOUR, sale_time) BETWEEN 12 AND 17 THEN 'Tarde'
+			WHEN DATEPART(HOUR, time) < 12 THEN 'Manhã'
+			WHEN DATEPART(HOUR, time) BETWEEN 12 AND 17 THEN 'Tarde'
 			ELSE 'Noite'
 		END AS turno
-	FROM retail_sales
+	FROM walmart_data
+) AS vendas_por_turno
+GROUP BY branch, turno
+ORDER BY branch, turno DESC
+```
+
+10. Quais as 5 filiais com a maior taxa de redução de receita do ano passado para o ano atual? Considere: Taxa = (última_receita - receita_atual) / ultima_receita * 100
+  ```sql
+-- Vendas de 2022
+WITH vendas_2022 AS
+(
+	SELECT
+		branch AS filial,
+		SUM(total) AS receita,
+		DATEPART(YEAR, date) AS ano_venda
+	FROM walmart_data
+	WHERE DATEPART(YEAR, date) = 2022
+	GROUP BY branch, DATEPART(YEAR, date)
+),
+vendas_2023 AS
+(
+	SELECT
+		branch AS filial,
+		SUM(total) AS receita,
+		DATEPART(YEAR, date) AS ano_venda
+	FROM walmart_data
+	WHERE DATEPART(YEAR, date) = 2023
+	GROUP BY branch, DATEPART(YEAR, date)
 )
+
 SELECT
-	turno,
-	COUNT(*) AS total_pedidos
-FROM horario_vendas
-GROUP BY turno
-ORDER BY total_pedidos DESC
+	TOP 5 ua.filial,
+	ua.receita AS receita_ultimo_ano,
+	aa.receita AS receita_ano_atual, 
+	ROUND((ua.receita - aa.receita) / ua.receita * 100, 2) AS taxa_reducao
+FROM vendas_2022 AS ua -- último ano
+JOIN vendas_2023 AS aa -- ano atual
+ON ua.filial = aa.filial
+WHERE ua.receita > aa.receita
+ORDER BY taxa_reducao DESC
 ```
 
