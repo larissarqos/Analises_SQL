@@ -125,7 +125,8 @@ FROM fraudes.dbo.fraud_data WHERE class = 0
 ORDER BY Diferenca_Segundos ASC
 ```
 
- * Compras fraudulentas: Marjoritariamente, contam com cadastro e compra no mesmo dia, geralmente com 1s de diferença entre cadastro e compra, o que pode indicar uso de bots para realização dessas compras
+ * Compras fraudulentas: Marjoritariamente, contam com cadastro e compra no mesmo dia, geralmente com 1s de diferença entre cadastro e compra,
+   o que pode indicar uso de bots para realização dessas compras
   ```sql
 -- Tempo em segundos entre cadastro e compra de operações fraudulentas
 SELECT
@@ -140,7 +141,8 @@ ORDER BY Diferenca_Segundos ASC
 6. Qual o perfil de cliente mais comum nas operações fraudulentas?
   ```sql
 -- O perfil mais comum em fraudes é do sexo masculino, com idade entre 26-35 anos.
--- No entanto, esse também é o perfil geral predominante de clientes da empresa, então não é possível estabelecer uma relação "perfil cliente x fraude"
+-- No entanto, esse também é o perfil geral predominante de clientes da empresa,
+-- então não é possível estabelecer uma relação "perfil cliente x fraude"
 WITH perfil_fraude AS (
   SELECT
     class AS classificacao,
