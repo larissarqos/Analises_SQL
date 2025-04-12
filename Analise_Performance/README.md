@@ -39,57 +39,88 @@ ORDER BY total_submissoes DESC
 
 2. Calcule a média diária de pontos para cada usuário
   ```sql
--- Não. Tanto o gênero feminino quanto masculino têm impacto semelhante nas vendas e faturamento:
--- Feminino: 1012 pedidos (50.93% do total de vendas); Valor total de 463.110 dólares (50.99% do faturamento);
--- Masculino: 975 pedidos (49,07% do total de vendas); Valor total de 445.120 dólares (49,01% do faturamento).
-SELECT gender,
-COUNT(*) AS total_pedidos,
-	SUM(total_sale) AS valor_total
-FROM retail_sales
-GROUP BY gender 
-ORDER BY valor_total DESC
-```
-
-3. Gere uma amostra de transações com valor total igual ou maior a 1000
-  ```sql
---Arquivo gerado como "sales_equals_higher_1000.csv".
-SELECT *
-FROM retail_sales
-WHERE total_sale >= 1000
-ORDER BY total_sale ASC
-```
-
-4. Quais os 5 clientes que mais compraram conosco?
-  ```sql
--- Os clientes de maior valor do período foram os de ID: 3, 1, 5, 2 e 4.
-SELECT TOP 5 customer_id,
-	SUM(total_sale) as valor_total
-FROM retail_sales
-GROUP BY customer_id
-ORDER BY valor_total DESC
-```
-
-5. Qual o total de vendas, considerando o gênero dos clientes e categoria dos produtos?
-  ```sql
-SELECT category,
-	gender,
-	COUNT(*) AS total_vendas
-	FROM retail_sales
-GROUP BY category, gender
-ORDER BY total_vendas DESC
-```
-
-6. Qual a média de idade dos clientes que compram na categoria 'Beauty', do gênero feminino?
-  ```sql
--- De acordo com a categoria Beauty, a média de idade pa é de 40 anos para o gênero feminino.
 SELECT 
-	category,
-	gender,
-	ROUND(AVG(age), 2) AS media_idade
-FROM retail_sales
-WHERE category = 'Beauty' AND gender = 'Female'
-GROUP BY gender, category
-ORDER BY gender
+    FORMAT(submitted_at, 'dd/MM') AS dia,
+    username AS nome_usuario,
+    AVG(points) AS media_diaria_pontos
+FROM data
+GROUP BY FORMAT(submitted_at, 'dd/MM'), username
+ORDER BY username
+```
+
+3. Encontre os 3 usuários com o maior número de envios positivos em cada dia
+  ```sql
+WITH submissoes_dia
+AS
+(	
+	SELECT
+		FORMAT(submitted_at, 'dd/MM') AS dia,
+		username AS nome_usuario,
+			SUM(CASE
+				WHEN points > 0 THEN 1
+				ELSE 0
+			END) AS resp_corretas
+	FROM data
+	GROUP BY FORMAT(submitted_at, 'dd/MM'), username
+),
+ranking_usuarios AS
+(
+	SELECT
+		dia,
+		nome_usuario,
+		resp_corretas,
+		DENSE_RANK() OVER(PARTITION BY dia ORDER BY resp_corretas DESC) AS ranking
+	FROM submissoes_dia
+)
+SELECT
+	dia,
+	nome_usuario,
+	resp_corretas,
+	ranking
+FROM ranking_usuarios
+WHERE ranking <=3
+```
+
+4. Encontre os 5 usuários com o maior número de envios incorretos
+  ```sql
+SELECT TOP 5
+	username AS nome_usuario,
+		SUM(CASE
+			WHEN points < 0 THEN 1
+			ELSE 0
+		END) AS resp_incorretas
+FROM data
+GROUP BY username
+ORDER BY resp_incorretas DESC
+```
+
+5. Apresente, por usuário, o total de respostas corretas, incorretas, e sua pontuação final
+  ```sql
+SELECT 
+    username AS nome_usuario,
+    SUM(CASE WHEN points < 0 THEN 1 ELSE 0 END) AS resp_incorretas,
+    SUM(CASE WHEN points > 0 THEN 1 ELSE 0 END) AS resp_corretas,
+    SUM(CASE WHEN points < 0 THEN points ELSE 0 END) AS pontos_resp_incorretas,
+    SUM(CASE WHEN points > 0 THEN points ELSE 0 END) AS pontos_resp_corretas,
+    SUM(points) AS pontuacao_final
+FROM data
+GROUP BY username
+ORDER BY resp_incorretas DESC
+```
+
+6. Encontre os 10 melhores desempenhos em cada semana
+  ```sql
+SELECT *
+FROM
+(	SELECT
+		DATEPART(WEEK, submitted_at) AS semana,
+		username AS nome_usuario,
+		SUM(points) AS total_pontos,
+		DENSE_RANK() OVER(PARTITION BY DATEPART(WEEK, submitted_at) ORDER BY SUM(points) DESC) AS ranking
+	FROM data
+	GROUP BY DATEPART(WEEK, submitted_at), username
+) AS ranking_semanal
+WHERE ranking <= 10
 ```
 
 
