@@ -4,7 +4,7 @@ GO
 SELECT *
 FROM data
 
--- 1 Liste todos os usuários distintos e suas estatísticas (retorne nome, total de submissões e pontos ganhos)
+-- 1. Liste todos os usuários distintos e suas estatísticas (retorne nome, total de submissões e pontos ganhos)
 SELECT
 	username AS nome_usuario,
 	COUNT(id) AS total_submissoes,
@@ -13,7 +13,7 @@ FROM data
 GROUP BY username
 ORDER BY total_submissoes DESC
 
--- 2 Calcule a média diária de pontos para cada usuário.
+-- 2. Calcule a média diária de pontos para cada usuário
 SELECT 
     FORMAT(submitted_at, 'dd/MM') AS dia,
     username AS nome_usuario,
@@ -22,7 +22,7 @@ FROM data
 GROUP BY FORMAT(submitted_at, 'dd/MM'), username
 ORDER BY username
 
--- 3 Encontre os 3 usuários com o maior número de envios positivos em cada dia.
+-- 3. Encontre os 3 usuários com o maior número de envios positivos em cada dia
 WITH submissoes_dia
 AS
 (	
@@ -53,7 +53,7 @@ SELECT
 FROM ranking_usuarios
 WHERE ranking <=3
 
--- 4 Encontre os 5 usuários com o maior número de envios incorretos.
+-- 4. Encontre os 5 usuários com o maior número de envios incorretos
 SELECT TOP 5
 	username AS nome_usuario,
 		SUM(CASE

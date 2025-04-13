@@ -1,6 +1,9 @@
 USE walmart
 GO
 
+SELECT *
+FROM walmart_data
+
 -- == Análise Exploratória dos Dados ==
 
 -- Total de transações
@@ -117,7 +120,7 @@ SELECT * FROM
 ) AS resultado
 WHERE ano = 2023 AND ranking IN (1, 2, 3)
 
--- 8. Qual a margem de lucro total para cada categoria? Considere: Margem de lucro total = (total * profit_margin)
+-- 8. Qual a margem de total de lucro para cada categoria? Considere: Margem de lucro total = (total * profit_margin)
 SELECT
 	category AS categoria,
 	SUM(total) as receita_total,
