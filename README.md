@@ -5,6 +5,7 @@
 </p>
 
 <br>
+## Análise de dados com SQL Server, contando com:
 
  * ### 🛠 Tratamento e modelagem de dados
  * ### 🔧 SELECT, JOIN, CTE, CASE, WINDOW FUNCTIONS
