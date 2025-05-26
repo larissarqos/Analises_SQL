@@ -128,10 +128,9 @@ FROM retail_sales
 Aqui, serão respondidas uma série de perguntas de negócio para entendermos os principais fatores que
 impactam as vendas e faturamento, considerando o perfil dos clientes, categoria dos produtos e o período de venda
 
-#### 📌 1. Qual categoria foi a mais comprada por nossos clientes e qual o valor total?
+#### 📌 1. Qual categoria foi a mais comprada por nossos clientes e qual o valor total?  
+A categoria mais comprada foi **Clothing: 698 vendas** (35,13% do total).Considerando o faturamento, a categoria **Eletronics teve maior rendimento**: 311.445 dólares (34,29% do total).
   ```sql
--- A categoria mais compra foi Clothing: 698 vendas (35,13% do total).
--- Considerando o faturamento, a categoria Eletronics teve maior rendimento: 311.445 dólares (34,29% do total).
 SELECT category,
 	COUNT(*) AS total_pedidos,
 	SUM(total_sale) AS valor_total
@@ -141,11 +140,12 @@ ORDER BY total_pedidos DESC
 ```
 --
 
-#### 📌 2. A quantidade de vendas e o faturamento apresenta grande diferença por gênero?
-  ```sql
--- Não. Tanto o gênero feminino quanto masculino têm impacto semelhante nas vendas e faturamento:
--- Feminino: 1012 pedidos (50.93% do total de vendas); Valor total de 463.110 dólares (50.99% do faturamento);
--- Masculino: 975 pedidos (49,07% do total de vendas); Valor total de 445.120 dólares (49,01% do faturamento).
+#### 📌 2. A quantidade de vendas e o faturamento apresenta grande diferença por gênero?  
+Não. Tanto o gênero feminino quanto masculino têm impacto semelhante nas vendas e faturamento:
+* Feminino: 1012 pedidos (50.93% do total de vendas); Valor total de 463.110 dólares (50.99% do faturamento);
+* Masculino: 975 pedidos (49,07% do total de vendas); Valor total de 445.120 dólares (49,01% do faturamento)
+
+```sql
 SELECT gender,
 COUNT(*) AS total_pedidos,
 	SUM(total_sale) AS valor_total
@@ -165,9 +165,9 @@ ORDER BY total_sale ASC
 ```
 --
 
-#### 📌 4. Quais os 5 clientes que mais compraram conosco?
+#### 📌 4. Quais os 5 clientes que mais compraram conosco?  
+ Os clientes de maior valor do período foram os de ID: 3, 1, 5, 2 e 4.
   ```sql
--- Os clientes de maior valor do período foram os de ID: 3, 1, 5, 2 e 4.
 SELECT TOP 5 customer_id,
 	SUM(total_sale) as valor_total
 FROM retail_sales
@@ -187,9 +187,9 @@ ORDER BY total_vendas DESC
 ```
 --
 
-#### 📌 6. Qual a média de idade dos clientes que compram na categoria 'Beauty', do gênero feminino?
-  ```sql
+#### 📌 6. Qual a média de idade dos clientes que compram na categoria 'Beauty', do gênero feminino?  
 -- De acordo com a categoria Beauty, a média de idade pa é de 40 anos para o gênero feminino.
+  ```sql
 SELECT 
 	category,
 	gender,
@@ -201,9 +201,9 @@ ORDER BY gender
 ```
 --
 
-#### 📌 7. Gere uma amostra das vendas realizadas em maio de 2022
+#### 📌 7. Gere uma amostra das vendas realizadas em maio de 2022  
+Arquivo gerado como "sale_05_2022.csv".
   ```sql
--- Arquivo gerado como "sale_05_2022.csv".
 SELECT *
 FROM retail_sales
 WHERE sale_date LIKE '2022-05%'
@@ -211,10 +211,9 @@ ORDER BY sale_date ASC
 ```
 --
 
-#### 📌 8. Retorne as transações de categoria 'Clothing', em que a quantidade vendida é mais que 10, no mês de novembro
+#### 📌 8. Retorne as transações de categoria 'Clothing', em que a quantidade vendida é mais que 10, no mês de novembro   
+ Não há quantidade de vendas maior ou igual a 10.
   ```sql
--- A quantidade máxima vendida da categoria 'Clothing' em novembro de 2022 é 4.
--- Não há quantidade de vendas maior ou igual a 10.
 SELECT *
 FROM retail_sales
 WHERE category = 'Clothing'
