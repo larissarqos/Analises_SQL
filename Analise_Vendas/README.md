@@ -1,7 +1,7 @@
 <h1 align="center"> SQL - Análise de Vendas </h1>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/ff50818d-effe-4e41-892d-82484554ad41" alt="img" width="1100"/>
+  <img src="https://github.com/user-attachments/assets/f4ad952c-19f4-4e2a-a73c-94b8aa0facdc" alt="img" width="1100"/>
 </p>
 
 <br>
