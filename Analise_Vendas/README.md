@@ -155,9 +155,9 @@ ORDER BY valor_total DESC
 ```
 --
 
-#### 📌 3. Gere uma amostra de transações com valor total igual ou maior a 1000
+#### 📌 3. Gere uma amostra de transações com valor total igual ou maior a 1000.  
+Arquivo gerado como "sales_equals_higher_1000.csv".
   ```sql
---Arquivo gerado como "sales_equals_higher_1000.csv".
 SELECT *
 FROM retail_sales
 WHERE total_sale >= 1000
@@ -234,9 +234,9 @@ ORDER BY ano_venda, total_vendas DESC
 ```
 --
 
-#### 📌 10. Qual o mês de melhor desempenho em cada ano?
+#### 📌 10. Qual o mês de melhor desempenho em cada ano?  
+2022: mês de julho; 2023: mês de fevereiro
   ```sql
--- 2022: mês de julho; 2023: mês de fevereiro
 SELECT * FROM
 (	
 	SELECT
@@ -250,10 +250,9 @@ SELECT * FROM
 ```
 --
 
-#### 📌 11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações.
-    Considere: Manhã <=12; Tarde > 12, <=17; Noite > 17
+#### 📌 11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações. Considere: Manhã <=12; Tarde > 12, <=17; Noite > 17.  
+O turno da noite possui o maior número de transações: 1062 pedidos (53,45% do total).
   ```sql
--- O turno da noite possui o maior número de transações: 1062 pedidos (53,45% do total).
 WITH horario_vendas
 AS(
 	SELECT *,
