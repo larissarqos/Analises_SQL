@@ -47,12 +47,14 @@ A base de dados está em inglês e se encontra em anexo como "retail_sales.csv".
 | cogs   | Custo por unidade   | float   |
 | total_sale   | Valor total da venda   | float   |
 
-### 🧹 Limpeza dos dados
-* Verificação e tratamento de valores nulos
-```sql
--- VISÃO GERAL DOS DADOS
-SELECT * FROM retail_sales
+***
 
+<br>
+
+### 🧹 Limpeza dos dados
+#### Verificação e tratamento de valores nulos
+
+```sql
 -- VERIFICANDO VALORES NULOS
 -- No processo de importação dos dados, valores nulos foram convertidos em 0
 SELECT * FROM retail_sales
@@ -80,32 +82,47 @@ OR cogs = '0'
 OR total_sale = '0'
 ```
 
+***
+
+<br>
+
 ### 🔎 Análise exploratória dos dados
 Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
 #### 📌 1. Qual o total de vendas?
+
   ```sql
 -- Contamos com um total de 1987 vendas
 SELECT COUNT(*) AS total_vendas
 FROM retail_sales
 ```
+--
+
 #### 📌 2. Qual o total de clientes?
   ```sql
 -- Contamos com um total 155 clientes
 SELECT COUNT(DISTINCT customer_id) AS total_clientes
 FROM retail_sales
 ```
+--
+
 #### 📌 3. Quantas e quais são as categorias dos nossos produtos?
   ```sql
 -- Contamos com 3 categorias: Clothing, Eletronics e Beauty
 SELECT DISTINCT category
 FROM retail_sales
 ```
+--
+
 #### 📌 4. Qual o faturamento total?
   ```sql
 O faturamento total é de 908.230 dólares
 SELECT SUM(total_sale) AS faturamento_total
 FROM retail_sales
 ```
+
+***
+
+<br>
 
 ### 📍 Solução de problemas de negócios
 Aqui, serão respondidas uma série de perguntas de negócio para entendermos os principais fatores que
@@ -122,6 +139,7 @@ FROM retail_sales
 GROUP BY category 
 ORDER BY total_pedidos DESC
 ```
+--
 
 #### 📌 2. A quantidade de vendas e o faturamento apresenta grande diferença por gênero?
   ```sql
@@ -135,6 +153,7 @@ FROM retail_sales
 GROUP BY gender 
 ORDER BY valor_total DESC
 ```
+--
 
 #### 📌 3. Gere uma amostra de transações com valor total igual ou maior a 1000
   ```sql
@@ -144,6 +163,7 @@ FROM retail_sales
 WHERE total_sale >= 1000
 ORDER BY total_sale ASC
 ```
+--
 
 #### 📌 4. Quais os 5 clientes que mais compraram conosco?
   ```sql
@@ -154,6 +174,7 @@ FROM retail_sales
 GROUP BY customer_id
 ORDER BY valor_total DESC
 ```
+--
 
 #### 📌 5. Qual o total de vendas, considerando o gênero dos clientes e categoria dos produtos?
   ```sql
@@ -164,6 +185,7 @@ SELECT category,
 GROUP BY category, gender
 ORDER BY total_vendas DESC
 ```
+--
 
 #### 📌 6. Qual a média de idade dos clientes que compram na categoria 'Beauty', do gênero feminino?
   ```sql
@@ -177,6 +199,7 @@ WHERE category = 'Beauty' AND gender = 'Female'
 GROUP BY gender, category
 ORDER BY gender
 ```
+--
 
 #### 📌 7. Gere uma amostra das vendas realizadas em maio de 2022
   ```sql
@@ -186,6 +209,7 @@ FROM retail_sales
 WHERE sale_date LIKE '2022-05%'
 ORDER BY sale_date ASC
 ```
+--
 
 #### 📌 8. Retorne as transações de categoria 'Clothing', em que a quantidade vendida é mais que 10, no mês de novembro
   ```sql
@@ -197,6 +221,7 @@ WHERE category = 'Clothing'
 	AND sale_date LIKE '2022-11%'
 	AND quantity >= 4
 ```
+--
 
 #### 📌 9. Indique o valor médio em vendas de cada mês
   ```sql
@@ -208,6 +233,7 @@ FROM retail_sales
 GROUP BY DATEPART(yyyy, sale_date), DATEPART(month, sale_date)
 ORDER BY ano_venda, total_vendas DESC
 ```
+--
 
 #### 📌 10. Qual o mês de melhor desempenho em cada ano?
   ```sql
@@ -223,6 +249,7 @@ SELECT * FROM
 	GROUP BY DATEPART(yyyy, sale_date), DATEPART(month, sale_date)
 ) AS resultado
 ```
+--
 
 #### 📌 11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações.
     Considere: Manhã <=12; Tarde > 12, <=17; Noite > 17
