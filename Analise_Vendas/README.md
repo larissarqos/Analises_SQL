@@ -88,34 +88,34 @@ OR total_sale = '0'
 
 ### 🔎 Análise exploratória dos dados
 Para realizar a análise exploratória, foram respondidas as seguinte perguntas:
-#### 📌 1. Qual o total de vendas?
+#### 📌 1. Qual o total de vendas?  
+Contamos com um total de 1987 vendas
 
   ```sql
--- Contamos com um total de 1987 vendas
 SELECT COUNT(*) AS total_vendas
 FROM retail_sales
 ```
 --
 
-#### 📌 2. Qual o total de clientes?
+#### 📌 2. Qual o total de clientes?  
+Contamos com um total 155 clientes
   ```sql
--- Contamos com um total 155 clientes
 SELECT COUNT(DISTINCT customer_id) AS total_clientes
 FROM retail_sales
 ```
 --
 
-#### 📌 3. Quantas e quais são as categorias dos nossos produtos?
+#### 📌 3. Quantas e quais são as categorias dos nossos produtos?  
+Contamos com 3 categorias: Clothing, Eletronics e Beauty
   ```sql
--- Contamos com 3 categorias: Clothing, Eletronics e Beauty
 SELECT DISTINCT category
 FROM retail_sales
 ```
 --
 
-#### 📌 4. Qual o faturamento total?
-  ```sql
+#### 📌 4. Qual o faturamento total?  
 O faturamento total é de 908.230 dólares
+  ```sql
 SELECT SUM(total_sale) AS faturamento_total
 FROM retail_sales
 ```
