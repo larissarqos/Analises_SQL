@@ -250,10 +250,7 @@ SELECT * FROM
 ```
 --
 
-#### 📌 11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações. Considere: 
-**- Manhã <=12;**
-**- Tarde > 12, <=17;**
-**- Noite > 17.**  
+#### 📌 11. Organize os horários de compra em turnos (manhã, tarde e noite) e indique que turnos contém mais transações. Considere: Manhã <=12; Tarde > 12, <=17; Noite > 17.**  
 O turno da noite possui o maior número de transações: 1062 pedidos (53,45% do total).
 
 ```sql
