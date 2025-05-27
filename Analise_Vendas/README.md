@@ -16,14 +16,14 @@ O projeto conta com uma base de dados de venda fictícia, em que será feita a l
 
 ## 🛠️ Ferramentas e Métodos Utilizados
 ### 🔸 Métodos
-- SQL: window function
 - Limpeza e tratamento de dados
 - Análise exploratória
 - Engenharia de atributos
 - Estatística
+- Businnes Intelligence
 
 ### 🔸 Ferramentas
-- SQL Server
+- SQL Server (window function, )
 - Excel (fonte de dados)
 - Power BI (visualização)
   
