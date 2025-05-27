@@ -87,11 +87,15 @@ A base de dados está em inglês e possui quatro tabelas: city (cidades), custom
 | total  | Valor total da venda  | floar   |
 | rating  | Nota da venda, de 1 a 5   | int  |
 
+<br>
 
 <h4 align="center">Relacionamento das Tabelas</h4>
 <p align="center">
   <img src="https://github.com/user-attachments/assets/533bf009-ce4b-45fb-9b51-532b02b91ce8" height="400" width="600"/>
 </p>
+
+
+***
 
 <br>
 
