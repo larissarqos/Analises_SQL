@@ -7,16 +7,33 @@
 <br>
 
 ## 📃 Contexto 
-Uma rede fictícia de lojas de café deseja ampliar seus negócios, para isso, deseja saber quais as melhores cidades para abertura de filiais, assim como quais os melhores produtos para venda.
+Uma rede fictícia de cafeterias deseja ampliar seus negócios, abrindo novas filiais em cidades promissoras. A rede deseja saber os melhores locais e produtos para abertura de suas novas lojas, com base no rendimento de suas vendas em filiais já existentes.
 
-## Objetivos
-Para identificar os melhores locais e produtos para expansão da rede, responderemos a uma série de perguntas de negócio, voltadas a atender a três pontos chave para essa identificação:
+***
+
+<br>
+
+## 🛠️ Ferramentas e Métodos Utilizados
+- Microsoft Excel (fórmulas, tabelas dinâmicas, gráficos, slicers)
+- Business Intelligence
+  
+***
+
+<br>
+
+## 🎯 Objetivos 
+Identificaremos os lugares com possibilidade de maior retorno, bem como os produtos de maior sucesso das cafeterias. Basicamente 3 pontos principais guiarão a análise:
 * Cidades que geram maior receita
 * Produtos que mais vendem
 * Estimativa de consumo para as possíveis novas lojas
 
-## Estrutura do Projeto
-### 1. Banco de dados
+***
+
+<br>
+
+## 🧱 Estrutura do Projeto  
+
+### 🗄 Banco de dados
 A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). Segue abaixo o dicionário dos dados e o relacionamento das tabelas:
 
 **Tabela city**
@@ -60,9 +77,9 @@ A base de dados está em inglês e possui quatro tabelas: city (cidades), custom
 
 <br>
 
-### 2. Respondendo às perguntas de negócio
+### 📍 Respondendo às perguntas de negócio
 
-1. Quantos clientes por cidade nós temos?
+#### 📌 1. Quantos clientes por cidade nós temos?
   ```sql
 -- Organizando um "TOP 3", Jaipur, Delhi e Pune possuem maior quantidade de clientes (acima de 50)
 SELECT
@@ -76,7 +93,7 @@ GROUP BY ci.city_name
 ORDER BY total_clientes DESC
 ```
 
-2. Qual é o valor médio de receita por cliente em cada cidade?
+#### 📌 2. Qual é o valor médio de receita por cliente em cada cidade?
   ```sql
 -- Em termos de receita, analisando novamente os 3 maiores índices, Pune, Chennai e Bangalore encabeçam a lista
 SELECT
@@ -93,7 +110,7 @@ GROUP BY ci.city_name
 ORDER BY receita_total DESC
 ```
 
-3. Quantas unidades de cada produto foram vendidas?
+#### 📌 3. Quantas unidades de cada produto foram vendidas?
   ```sql
 -- Há 4 produtos com maior destaque nas vendas:
 -- Cold Brew Coffee Pack (6 Bottles), Ground Espresso Coffee (250g), Instant Coffee Powder (100g) e Coffee Beans (500g)
@@ -108,7 +125,7 @@ GROUP BY p.product_name
 ORDER BY total_pedidos DESC
 ```
 
-4. Quais são os três produtos mais vendidos em cada cidade?
+#### 📌 4. Quais são os três produtos mais vendidos em cada cidade?
   ```sql
 -- Mesmo em diferentes cidades, os 4 produtos listados anteriormente com maior quantidade de vendas ocupam ao menos
 -- uma das posições no TOP 3 de cada cidade
@@ -132,7 +149,7 @@ FROM
 WHERE ranking <= 3
 ```
 
-5. Forneça o valor médio de vendas e aluguel estimado por cliente, de cada cidade.
+#### 📌 5. Forneça o valor médio de vendas e aluguel estimado por cliente, de cada cidade.
   ```sql
 -- As cidades com maior receita média são Pune, Chennai e Bangalore
 -- Analisando o custo benefício x receita média, Pune, Chennai e Jaipur têm melhor desempenho
@@ -151,7 +168,7 @@ GROUP BY ci.city_name, ci.estimated_rent
 ORDER BY receita_media_cliente DESC
 ```
 
-6. Qual a estimativa, por cidade, do consumo de café, considerando o comportamento de 25% da população?
+#### 📌 6. Qual a estimativa, por cidade, do consumo de café, considerando o comportamento de 25% da população?
   ```sql
 -- Delhi e Mumbai têm maiores populações e, consequentemente, uma maior estimativa de consumo
 SELECT
@@ -162,7 +179,7 @@ FROM city
 ORDER BY populacao DESC
 ```
 
-7. Gere uma lista de cidades com seus clientes e estimativa de consumidores de café.
+#### 📌 7. Gere uma lista de cidades com seus clientes e estimativa de consumidores de café.
   ```sql
 -- Delhi possui uma maior quantidade de clientes e também maior estimativa de consumidores
 -- Especialmente se comparada com Jaipur, que possui quase a mesma quantidade de clientes, mas uma estimativa 7x menor
@@ -179,7 +196,7 @@ GROUP BY ci.city_name, ci.population
 ORDER BY (ci.population * 0.25) / 1000000 DESC
 ```
 
-8. Qual é a receita total das vendas, considerando todas as cidades, no último trimestre de 2023?
+#### 📌 8. Qual é a receita total das vendas, considerando todas as cidades, no último trimestre de 2023?
   ```sql
 -- Dado o último trimestre, Pune, Chennai, Bangalore, Jaipur e Delhi têm maior desempenho
 -- Essas mesmas 5 cidades também têm receita geral mais alta
@@ -199,7 +216,7 @@ GROUP BY ci.city_name
 ORDER BY receita_total DESC
 ```
 
-9. Informe as taxas de crescimento ou declínio nas vendas de café, ao longo do período
+#### 📌 9. Informe as taxas de crescimento ou declínio nas vendas de café, ao longo do período
   ```sql
 WITH vendas_mensais AS
 (
@@ -238,7 +255,7 @@ FROM taxa_crescimento
 WHERE ultimo_mes_vendas IS NOT NULL
 ```
 
-10. Identifique as 3  cidades com a maior receita média por cliente. Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
+#### 📌 10. Identifique as 3  cidades com a maior receita média por cliente. Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
   ```sql
 -- Pune, Chennai e Bangalore possuem maior receita média por cliente
 WITH cidade_receita
@@ -282,19 +299,32 @@ ORDER BY receita_total DESC
 ```
 <br>
 
-### 4. Recomendações
-De acordo com a análise dos dados, segue quais as melhores cidades para novas lojas e quais os produtos que, nos novos negócios, podem gerar maior receita:
+### 📈 Recomendações Estratégicas
+De acordo com a análise dos dados, segue as melhores cidades para novas lojas (menor custo e maiores estimativas de receita e quantidade de clientes) e os produtos de melhor desempenho:
 
-**Cidades**:
+#### 🟦 Cidades:
    * **Delhi:** Segunda maior quantidade de clientes (68); Maior estimativa de consumidores (7,7 milhões); Média de aluguel baixa (330);
    * **Pune:** Terceira maior quantidade de clientes (52); Maior receita média por clientes (24 mil); Média de aluguel baixa (294);
    * **Jaipur:** Maior quantidade de clientes (69); Receita média considerável (11 mil); Menor média de aluguel (156);
    * **Chennai:** Quarta maior quantidade de clientes (42); Segunda maior receita média (22 mil); Estimativa de consumidores considerável (2,78 milhões).
      
-**Produtos**:
+#### 🟦 Produtos:
    * **Cold Brew Coffee Pack (6 Bottles):** Possui maior quantidade de vendas (1326) e gera também a maior receita (1.193.400);
    * **Coffee Beans (500g):** Terceira maior quantidade de vendas (1218) e segunda maior receita (730.800);
    * **Ground Espresso Coffee (250g):** Segunda maior quantidade de clientes (1271) e quarta maior receita (444.850);
    * **Instante Coffee Powder (100g):** Alta quantidade de vendas (1226) e faturamento considerável (306.500);
    * **Coffee Gift Hamper:** Apesar da baixa quantidade de vendas comparado aos produtos anteriores (270), gerou a terceira maior receita (486.000).
 
+***
+
+<br>
+
+### 🚀 Impacto Esperado
+
+#### 🟩
+
+***
+
+<br>
+
+*Este projeto foi desenvolvido como parte do meu portfólio em análise de dados. Sinta-se à vontade para explorar os dados, sugerir melhorias ou entrar em contato!*
