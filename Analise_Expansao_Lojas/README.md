@@ -1,6 +1,12 @@
-<h1 align="center">Análise de Expansão de Negócios</h1>
+<h1 align="center">Análise de Expansão de Lojas </h1>
 
-## Contexto
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/691c4372-49e4-43d2-92b2-b32e98b721cb" alt="img" width="1100"/>
+</p>
+
+<br>
+
+## 📃 Contexto 
 Uma rede fictícia de lojas de café deseja ampliar seus negócios, para isso, deseja saber quais as melhores cidades para abertura de filiais, assim como quais os melhores produtos para venda.
 
 ## Objetivos
