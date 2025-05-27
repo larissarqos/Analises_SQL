@@ -15,8 +15,17 @@ O projeto conta com uma base de dados de venda fictícia, em que será feita a l
 <br>
 
 ## 🛠️ Ferramentas e Métodos Utilizados
-- Microsoft Excel (fórmulas, tabelas dinâmicas, gráficos, slicers)
-- Business Intelligence
+### Métodos
+- SQL: window function
+- Limpeza e tratamento de dados
+- Análise exploratória
+- Engenharia de atributos
+- Estatística
+
+### Ferramentas
+- SQL Server
+- Excel (fonte de dados)
+- Power BI (visualização)
   
 ***
 
@@ -272,3 +281,15 @@ GROUP BY turno
 ORDER BY total_pedidos DESC
 ```
 
+***
+
+<br>
+
+### 📈 Recomendações Estratégicas
+
+
+***
+
+<br>
+
+*Este projeto foi desenvolvido como parte do meu portfólio em análise de dados. Sinta-se à vontade para explorar os dados, sugerir melhorias ou entrar em contato!*
