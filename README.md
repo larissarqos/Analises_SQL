@@ -8,9 +8,9 @@
 
 ## Análise de dados com SQL Server, contando com:
 
- * ### 🛠 Tratamento e modelagem de dados
- * ### 🔧 SELECT, JOIN, CTE, CASE, WINDOW FUNCTIONS
- * ### 📊 Integração com Tableau e Power BI para visualizações 
- * ### 📑 Documentação das análises
- * ### 🎯 Sugestões estratégicas para os problemas de negócio encontrados
- * ### 🚀 Impacto esperado se adotadas as sugestões
+ * #### Tratamento e modelagem de dados
+ * #### SELECT, JOIN, CTE, CASE, WINDOW FUNCTIONS
+ * #### Integração com Tableau e Power BI para visualizações 
+ * #### Documentação das análises
+ * #### Sugestões estratégicas para os problemas de negócio encontrados
+ * #### Impacto esperado se adotadas as sugestões
