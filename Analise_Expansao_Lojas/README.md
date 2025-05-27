@@ -92,6 +92,7 @@ ON cs.city_id = ci.city_id
 GROUP BY ci.city_name
 ORDER BY total_clientes DESC
 ```
+--
 
 #### 📌 2. Qual é o valor médio de receita por cliente em cada cidade?
   ```sql
@@ -109,6 +110,7 @@ ON ci.city_id = cs.city_id
 GROUP BY ci.city_name
 ORDER BY receita_total DESC
 ```
+--
 
 #### 📌 3. Quantas unidades de cada produto foram vendidas?
   ```sql
@@ -124,6 +126,7 @@ ON s.product_id = p.product_id
 GROUP BY p.product_name
 ORDER BY total_pedidos DESC
 ```
+--
 
 #### 📌 4. Quais são os três produtos mais vendidos em cada cidade?
   ```sql
@@ -148,6 +151,7 @@ FROM
 ) AS rank_pedidos
 WHERE ranking <= 3
 ```
+--
 
 #### 📌 5. Forneça o valor médio de vendas e aluguel estimado por cliente, de cada cidade.
   ```sql
@@ -167,6 +171,7 @@ ON ci.city_id = cs.city_id
 GROUP BY ci.city_name, ci.estimated_rent
 ORDER BY receita_media_cliente DESC
 ```
+--
 
 #### 📌 6. Qual a estimativa, por cidade, do consumo de café, considerando o comportamento de 25% da população?
   ```sql
@@ -178,6 +183,7 @@ SELECT
 FROM city
 ORDER BY populacao DESC
 ```
+--
 
 #### 📌 7. Gere uma lista de cidades com seus clientes e estimativa de consumidores de café.
   ```sql
@@ -195,6 +201,7 @@ ON ci.city_id = cs.city_id
 GROUP BY ci.city_name, ci.population
 ORDER BY (ci.population * 0.25) / 1000000 DESC
 ```
+--
 
 #### 📌 8. Qual é a receita total das vendas, considerando todas as cidades, no último trimestre de 2023?
   ```sql
@@ -215,6 +222,7 @@ WHERE
 GROUP BY ci.city_name
 ORDER BY receita_total DESC
 ```
+--
 
 #### 📌 9. Informe as taxas de crescimento ou declínio nas vendas de café, ao longo do período
   ```sql
@@ -254,6 +262,7 @@ SELECT
 FROM taxa_crescimento
 WHERE ultimo_mes_vendas IS NOT NULL
 ```
+--
 
 #### 📌 10. Identifique as 3  cidades com a maior receita média por cliente. Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
   ```sql
