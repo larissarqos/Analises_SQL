@@ -1,4 +1,4 @@
-<h1 align="center"> 🛒 Análise de Vendas </h1>
+<h1 align="center"> Análise de Vendas </h1>
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f4ad952c-19f4-4e2a-a73c-94b8aa0facdc" alt="img" width="1100"/>
