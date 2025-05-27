@@ -14,8 +14,17 @@ Uma rede fictícia de cafeterias deseja ampliar seus negócios, abrindo novas fi
 <br>
 
 ## 🛠️ Ferramentas e Métodos Utilizados
-- Microsoft Excel (fórmulas, tabelas dinâmicas, gráficos, slicers)
-- Business Intelligence
+### 🔸 Métodos
+- Limpeza e tratamento de dados
+- Análise exploratória
+- Engenharia de atributos
+- Estatística
+- Businnes Intelligence
+
+### 🔸 Ferramentas
+- SQL Server (window function)
+- Excel (fonte de dados)
+- Power BI (visualização)
   
 ***
 
