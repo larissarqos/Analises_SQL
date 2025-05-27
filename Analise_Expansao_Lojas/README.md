@@ -40,7 +40,15 @@ Identificaremos os lugares com possibilidade de maior retorno, bem como os produ
 
 <br>
 
-## 🧱 Estrutura do Projeto  
+## 🧱 Estrutura do Projeto
+
+#### - Banco de dados
+#### - Respondendo às perguntas de negócio
+#### - Recomendações Estratégicas
+
+***
+
+<br>
 
 ### 🗄 Banco de dados
 A base de dados está em inglês e possui quatro tabelas: city (cidades), customers (clientes), products (produtos) e sales (vendas). Segue abaixo o dicionário dos dados e o relacionamento das tabelas:
