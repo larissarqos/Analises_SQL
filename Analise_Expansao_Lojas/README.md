@@ -45,6 +45,7 @@ Identificaremos os lugares com possibilidade de maior retorno, bem como os produ
 #### - 🗄 Banco de dados
 #### - 📍 Respondendo às perguntas de negócio
 #### - 📈 Recomendações Estratégicas
+#### - 🚀 Impacto Esperado
 
 ***
 
