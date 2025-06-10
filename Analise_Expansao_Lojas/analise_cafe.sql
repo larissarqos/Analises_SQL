@@ -1,6 +1,10 @@
 USE COFFEE
-GO
 
+SELECT * FROM sales
+
+-- ========== ANÁLISE EXPLORATÓRIA ==========
+
+-- 1. Qual o 
 -- 1. Quantos clientes por cidade nós temos?
 -- Organizando um "TOP 3", Jaipur, Delhi e Pune possuem maior quantidade de clientes (acima de 50)
 SELECT
@@ -159,7 +163,8 @@ SELECT
 FROM taxa_crescimento
 WHERE ultimo_mes_vendas IS NOT NULL
 
--- 10. Identifique as 3  cidades com a maior receita média por cliente. Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
+-- 10. Identifique as 3  cidades com a maior receita média por cliente.
+-- Considere: cidade, venda, aluguel, clientes e consumidor estimado de café).
 -- Pune, Chennai e Bangalore possuem maior receita média por cliente
 WITH cidade_receita
 AS
